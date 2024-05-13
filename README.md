@@ -1,4 +1,4 @@
-# Bitirme_projesi
+# Bitirme_Projesi
 Projenin UI tasarımı rapora eklenmiştir. Uygulama Flutter ile kodlanmıştır.
 
 
