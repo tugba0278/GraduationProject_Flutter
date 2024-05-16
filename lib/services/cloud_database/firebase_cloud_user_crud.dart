@@ -1,9 +1,9 @@
 // moving away from the local database
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bitirme_projesi/services/cloud_database/cloud_constants.dart';
 import 'package:bitirme_projesi/services/cloud_database/cloud_user_exceptions.dart';
-import 'package:bitirme_projesi/services/cloud_database/cloud_user.dart';
 
 class FirebaseCloudStorage {
   // Making [FirebaseCloudStorage] a singleton
@@ -24,29 +24,12 @@ class FirebaseCloudStorage {
   final users = FirebaseFirestore.instance.collection(usersCollectionName);
   final ownerUserId = FirebaseAuth.instance.currentUser?.uid;
 
-  // A [Stream] is a sequence of asynchronous events.
-  // It represents a flow of data that you can listen to over time.
-  // We need a [Stream] to keep our application up-to-date with changes in the
-  // cloud.
-  // Stream<Iterable<CloudNote>> allNotes({required String ownerUserId}) {
-  //   // .snapshots returns a [Stream] of [QuerySnapshot]s, not just one.
-  //   // Each snapshot is an (event) which has a list of all of the documents
-  //   // (docs) inside the database.
-  //   return notes.snapshots().map((event) => event.docs
-  //       // Then from this list of documents, only the documents which belongs
-  //       // to the current user is used (to create instances of [CloudNote]).
-  //       .map((doc) => CloudNote.fromSnapshot(doc))
-  //       // This .where is clause is from dart:core which returns an object based
-  //       // on a test, in this case user IDs being equal.
-  //       .where((note) => note.ownerUserId == ownerUserId));
-  // }
-
   // CRUD
   // C: A function to create new notes
-  Future<CloudUser> createNewUser({
+  Future<void> createNewUser({
+    required String documentId,
     required String ownerUserId,
     required String name,
-    required String lastName,
     required String phoneNumber,
     required String birthDate,
     required String blood,
@@ -55,78 +38,25 @@ class FirebaseCloudStorage {
     // like in SQLite. You provide key-value pairs [Map]s. Everything that is
     // added to the Collection/Database is going to be packaged into a document,
     // with the fields (keys) and the values (values) that we have provided.
-    final user = await users.add({
-      nameFieldName: name,
-      lastNameFieldName: lastName,
+    const String diseaseInfo = "";
+    const String kilo = "";
+    const String lastBloodDonationDate = "";
+    const String adress = "";
+
+    await users.doc(documentId).set({
       ownerUserIdFieldName: ownerUserId,
+      nameFieldName: name,
       phoneNumberFieldName: phoneNumber,
       birthDateFieldName: birthDate,
       bloodFieldName: blood,
+      diseaseInfoFieldName: diseaseInfo,
+      kiloFieldName: kilo,
+      lastBloodDonationDateFieldName: lastBloodDonationDate,
+      adressFieldName: adress,
     });
-
-    final fetchedUser = await user.get();
-    return CloudUser(
-      name: name,
-      lastName: lastName,
-      phoneNumber: phoneNumber,
-      documentId: fetchedUser.id,
-      ownerUserId: ownerUserId,
-      birthDate: birthDate,
-      blood: blood,
-    );
   }
 
-  //R: A function to get user genres by user ID
-  // Future<void> getGenres() async {
-  //   try {
-  //     var querySnapshot = await users
-  //         .where(ownerUserIdFieldName,
-  //             isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-  //         .get();
-
-  //     if (querySnapshot.docs.isNotEmpty) {
-  //       var user = CloudUser.fromSnapshot(querySnapshot.docs.first);
-  //       return user.genre;
-  //     } else {
-  //       // User not found or has no genres
-  //       return [];
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //     throw CouldNotGetAllUserException();
-  //   }
-  // }
-
-  // U: A function to update genre
-  // Future<void> getInformation({
-  //   required documentId,
-  //   required String firstText,
-  //   required String secondText,
-  //   required String thirdText,
-
-  // }) async {
-  //   try {
-  //     // There must be a logged in user
-  //     final querySnapshot = await users
-  //         .where(
-  //           ownerUserIdFieldName,
-  //           isEqualTo: FirebaseAuth.instance.currentUser?.uid,
-  //         )
-  //         .get();
-  //     if (querySnapshot.docs.isNotEmpty) {
-  //       final documentId = querySnapshot.docs[0].id;
-  //       await users.doc(documentId).update({genreFieldName: genre});
-  //       print('Document ID: $documentId');
-  //     } else {
-  //       print('No matching documents found.');
-  //     }
-  //   } catch (e) {
-  //     print('Error retrieving document ID: $e');
-  //     throw CouldNotUpdateGenreException();
-  //   }
-  // }
-
-  // U: A function to update genre
+  // U: A function to update fullname
   Future<void> updateFullName({
     required documentId,
     required String name,
@@ -141,7 +71,7 @@ class FirebaseCloudStorage {
     }
   }
 
-  // U: A function to update genre
+  // U: A function to update a given field
   Future<void> updateField({
     required documentId,
     required String fieldName,

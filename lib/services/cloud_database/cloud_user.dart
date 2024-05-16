@@ -21,7 +21,7 @@ class CloudUser {
   });
 
   CloudUser.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
-      : documentId = snapshot.id,
+      : documentId = snapshot.data()[ownerUserIdFieldName],
         ownerUserId = snapshot.data()[ownerUserIdFieldName],
         name = snapshot.data()[nameFieldName],
         lastName = snapshot.data()[lastNameFieldName],

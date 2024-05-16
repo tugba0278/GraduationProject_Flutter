@@ -1,6 +1,7 @@
 import 'package:bitirme_projesi/routes.dart';
 import 'package:bitirme_projesi/services/cloud_database/firebase_cloud_user_crud.dart';
 import 'package:bitirme_projesi/utilities/dialogs/email_already_in_use_dialog.dart';
+import 'package:bitirme_projesi/utilities/dialogs/user_created_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bitirme_projesi/user_auth/firebase_auth_services.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,8 @@ class _MyFormState extends State<RegisterUser> {
 
   final _formKey =
       GlobalKey<FormState>(); //doğrulama işlemleri için key oluşturur
-  final TextEditingController _nameController =
+  final TextEditingController _fullNameController =
       TextEditingController(); //adın girileceği text metnin kontrolünü sağlar
-  final TextEditingController _lastNameController =
-      TextEditingController(); //soyadın girileceği text metnin kontrolünü sağlar
   final TextEditingController _phoneNumberController =
       TextEditingController(); //numaranın girileceği text metnin kontrolünü sağlar
   final TextEditingController _passwordController =
@@ -42,8 +41,7 @@ class _MyFormState extends State<RegisterUser> {
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _lastNameController.dispose();
+    _fullNameController.dispose();
     _phoneNumberController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -53,393 +51,446 @@ class _MyFormState extends State<RegisterUser> {
     super.dispose();
   }
 
+  bool _showNameWarning = false;
+  bool _showBirthDateWarning = false;
+  bool _showBloodWarning = false;
+  bool _showPhoneNumberWarning = false;
+  bool _showEmailWarning = false;
+  bool _showPasswordWarning = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        //overflow engellenir
-        child: Container(
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("lib/assets/background_image.png"),
-                  alignment: Alignment.center,
-                  fit: BoxFit.contain)),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(
-                20, 60, 20, 20), //her taraftan bırakılan mesafe ,)
-            child: Form(
-              //form widgeti
-              key: _formKey, //kontrolü sağlamak için anahtar
-              child: Column(
-                mainAxisAlignment:
-                    MainAxisAlignment.center, //dikeyde merkeze hizalama
-                children: [
-                  Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, //yatayda merkeze hizalama
-                    children: [
-                      const Text(
-                        "AD",
-                        style: TextStyle(
-                            //text özelleştirme
-                            fontSize: 27, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Courier' //yazı tipi
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context,
+                loginPageRoute,
+                (route) =>
+                    false); // Geri tuşuna basıldığında önceki sayfaya dön
+          },
+          iconSize: 50,
+          color: const Color(0xFFCC4646),
+        ),
+      ),
+      body: GestureDetector(
+        onTap: () {
+          // Boş bir alana tıklandığında uyarıları kaldır
+          FocusScope.of(context).unfocus();
+          setState(() {
+            _showNameWarning = false;
+            _showEmailWarning = false;
+            _showPasswordWarning = false;
+            _showPhoneNumberWarning = false;
+            _showBloodWarning = false;
+            _showBirthDateWarning = false;
+          });
+        },
+        child: SingleChildScrollView(
+          //overflow engellenir
+          child: Container(
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("lib/assets/background_image.png"),
+                    alignment: Alignment.center,
+                    fit: BoxFit.contain)),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                  50, 40, 50, 20), //her taraftan bırakılan mesafe ,)
+              child: Form(
+                //form widgeti
+                key: _formKey, //kontrolü sağlamak için anahtar
+                child: Column(
+                  mainAxisAlignment:
+                      MainAxisAlignment.center, //dikeyde merkeze hizalama
+                  children: [
+                    Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start, //yatayda merkeze hizalama
+                      children: [
+                        const Text(
+                          "Ad Soyad",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontFamily: 'Times New Roman',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        TextFormField(
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman',
+                          ),
+                          controller:
+                              _fullNameController, //tam ad içeriği kontrolü
+                          decoration: const InputDecoration(
+                            //input kutucuğu özelleştirme
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                  10)), //kutucuk kenarları ovallik 0
                             ),
-                        textAlign: TextAlign.left,
-                      ),
-                      TextFormField(
-                        style: const TextStyle(
-                            //textformfield özelleştirme
-                            fontSize: 20, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Courier', //yazı tipi
-                            fontWeight: FontWeight.bold, //yazı kalınlaştırma
-                            color: Colors.black //yazı rengi
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFCC4646)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
-                        controller: _nameController, //tam ad içeriği kontrolü
-                        decoration: const InputDecoration(
-                          //input kutucuğu özelleştirme
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.zero), //kutucuk kenarları ovallik 0
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFCC4646)),
-                            borderRadius: BorderRadius.all(Radius.zero),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white, //kutucuk rengi
-                          contentPadding: EdgeInsets.symmetric(
-                            //yazı ve kutucuk arasındaki dikey mesafe
-                            vertical: 3.0,
-                          ),
-                        ),
-                        validator: (value) {
-                          //tam ad input girilip girilmediğini kontrol eder
-                          if (value == null || value.isEmpty) {
-                            return 'Lütfen adınızı girin'; //ad girilmediyse bu mesaj iletilir
-                          }
-                          return null; //ad geçerli
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        "SOYAD",
-                        style: TextStyle(
-                          fontSize: 27,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Courier',
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                      TextFormField(
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Courier',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        controller: _lastNameController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.zero,
+                            filled: true,
+                            fillColor: Color.fromRGBO(
+                                255, 255, 255, 0.7), //kutucuk rengi
+                            contentPadding: EdgeInsets.symmetric(
+                              //yazı ve kutucuk arasındaki dikey mesafe
+                              vertical: 3.0,
+                              horizontal: 10,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFCC4646)),
-                            borderRadius: BorderRadius.all(Radius.zero),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 3.0,
-                          ),
+                          validator: (value) {
+                            //tam ad input girilip girilmediğini kontrol eder
+                            if (value == null || value.isEmpty) {
+                              setState(() {
+                                _showNameWarning = true;
+                              });
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Lütfen soyadınızı girin';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        "DOĞUM TARİHİ",
-                        style: TextStyle(
-                          fontSize: 27,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Courier',
+                        if (_showNameWarning) // Ad soyad uyarısı
+                          const Text(
+                            'Lütfen ad soyad girin',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Doğum Tarihi ",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontFamily: 'Times New Roman',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
                         ),
-                        textAlign: TextAlign.left,
-                      ),
 
-                      TextFormField(
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Courier',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                        TextFormField(
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman',
+                          ),
+                          readOnly: true,
+                          onTap: () {
+                            _selectDate(context);
+                          },
+                          controller: _birthDateController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFCC4646)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromRGBO(255, 255, 255, 0.7),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 3.0,
+                              horizontal: 10,
+                            ),
+                            hintText: 'GG-AA-YY',
+                          ),
+                          validator: (value) {
+                            //tam ad input girilip girilmediğini kontrol eder
+                            if (value == null || value.isEmpty) {
+                              setState(() {
+                                _showBirthDateWarning = true;
+                              });
+                            }
+                            return null;
+                          },
                         ),
-                        readOnly: true,
-                        onTap: () {
-                          _selectDate(context);
-                        },
-                        controller: _birthDateController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.zero,
+                        if (_showBirthDateWarning)
+                          const Text(
+                            'Lütfen doğum tarihi girin',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFCC4646)),
-                            borderRadius: BorderRadius.all(Radius.zero),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Kan Grubu",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontFamily: 'Times New Roman',
+                            fontWeight: FontWeight.bold,
                           ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 3.0,
+                          textAlign: TextAlign.left,
+                        ),
+                        TextFormField(
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman',
                           ),
-                          hintText: 'GG-AA-YY',
+                          controller: _bloodTypeController,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFCC4646)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromRGBO(255, 255, 255, 0.7),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 3.0,
+                              horizontal: 10,
+                            ),
+                            hintText: 'Örneğin: A Rh+',
+                          ),
+                          validator: (value) {
+                            //tam ad input girilip girilmediğini kontrol eder
+                            if (value == null || value.isEmpty) {
+                              setState(() {
+                                _showBloodWarning = true;
+                              });
+                            }
+                            return null;
+                          },
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        "KAN GRUBU",
-                        style: TextStyle(
-                          fontSize: 27,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Courier',
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                      TextFormField(
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic,
-                          fontFamily: 'Courier',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                        controller: _bloodTypeController,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.zero,
+                        if (_showBloodWarning)
+                          const Text(
+                            'Lütfen kan grubu girin',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
                             ),
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFCC4646)),
-                            borderRadius: BorderRadius.all(Radius.zero),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: EdgeInsets.symmetric(
-                            vertical: 3.0,
-                          ),
-                          hintText:
-                              'Örneğin: A Rh+', // Kullanıcıya örnek bir yazı
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Lütfen kan grubunuzu girin';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      const Text(
-                        "TELEFON NUMARASI",
-                        style: TextStyle(
-                            //text özelleştirme
-                            fontSize: 27, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Courier' //yazı tipi
-                            ),
-                        textAlign: TextAlign.left,
-                      ),
 
-                      TextFormField(
-                        style: const TextStyle(
-                            //textformfield özelleştirme
-                            fontSize: 20, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Courier', //yazı tipi
-                            fontWeight: FontWeight.bold, //yazı kalınlaştırma
-                            color: Colors.black //yazı rengi
-                            ),
-                        controller:
-                            _phoneNumberController, //numara içeriği kontrolü
-                        keyboardType: TextInputType.phone, //input tipi
-                        decoration: const InputDecoration(
-                          //input kutucuğu özelleştirme
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.zero), //input kutucuğu ovalliği 0
+                        const SizedBox(height: 10),
+                        const Text(
+                          "Telefon Numarası",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontFamily: 'Times New Roman',
+                            fontWeight: FontWeight.bold,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFCC4646)),
-                            borderRadius: BorderRadius.all(Radius.zero),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white, //kutucuk rengi
-                          contentPadding: EdgeInsets.symmetric(
-                            //input ve kutucuk arasındaki mesafe
-                            vertical: 3.0,
-                          ),
-                          hintText: '(5--)',
+                          textAlign: TextAlign.left,
                         ),
-                        validator: (value) {
-                          //numara input girilip girilmediğini kontrol eder
-                          if (value == null || value.isEmpty) {
-                            return 'Lütfen telefon numaranızı girin'; //numara girilmediyse bu mesaj iletilir
-                          }
-                          return null; //numara geçerli
-                        },
-                      ),
-                      const SizedBox(
-                          height: 10), //2. kutucuk ve 3. text arasındaki mesafe
-                      const Text(
-                        "E-MAİL",
-                        style: TextStyle(
-                            //text özelleştirme
-                            fontSize: 27, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Courier' //yazı tipi
+
+                        TextFormField(
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman',
+                          ),
+                          controller:
+                              _phoneNumberController, //numara içeriği kontrolü
+                          keyboardType: TextInputType.phone, //input tipi
+                          decoration: const InputDecoration(
+                            //input kutucuğu özelleştirme
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                  10)), //input kutucuğu ovalliği 0
                             ),
-                        textAlign: TextAlign.left,
-                      ),
-
-                      TextFormField(
-                        style: const TextStyle(
-                            //textformfield özelleştirme
-                            fontSize: 20, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Courier', //yazı tipi
-                            fontWeight: FontWeight.bold, //yazıkalınlaştırma
-                            color: Colors.black //yazı rengi
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFCC4646)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
-                        controller: _emailController, //e-mail içeriği kontrolü
-                        keyboardType: TextInputType.emailAddress, //input tipi
-                        decoration: const InputDecoration(
-                          //input kutucuğu özelleştirme
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.zero), //kutucuk kenarları ovalliği 0
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFCC4646)),
-                            borderRadius: BorderRadius.all(Radius.zero),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white, //kutucuk rengi
-                          contentPadding: EdgeInsets.symmetric(
-                            //input ve kutucuk arasındaki dikey mesafe
-                            vertical: 3.0,
-                          ),
-                          hintText: 'name@gmail.com',
-                        ),
-                        validator: (value) {
-                          //e-mail input girilip girilmediğini kontrol eder
-                          if (value == null || value.isEmpty) {
-                            return 'Lütfen e-posta adresinizi girin'; //e-mail girilmediyse bu mesaj iletilir
-                          } else if (!value.contains('@')) {
-                            return 'Geçerli bir e-posta adresi girin'; //@ işaretini içermezse bu mesaj iletilir
-                          }
-                          return null; //e-mail geçerli
-                        },
-                      ),
-                      const SizedBox(
-                          height: 10), //3. kutucuk ve 4. text arasındaki mesafe
-                      const Text(
-                        "PAROLA",
-                        style: TextStyle(
-                          //text özelleştirme
-                          fontSize: 27, //yazı boyutu
-                          fontStyle: FontStyle.italic, //yazı itailk yapma
-                          fontFamily: 'Courier', //yazı tipi
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-
-                      TextFormField(
-                        style: const TextStyle(
-                            //textformfield özelleştirme
-                            fontSize: 20, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Courier', //yazı tipi
-                            fontWeight: FontWeight.bold //yazı kalınlaştırma
+                            filled: true,
+                            fillColor: Color.fromRGBO(
+                                255, 255, 255, 0.7), //kutucuk rengi
+                            contentPadding: EdgeInsets.symmetric(
+                              //input ve kutucuk arasındaki mesafe
+                              vertical: 3.0,
+                              horizontal: 10,
                             ),
-                        controller:
-                            _passwordController, //parola içeriği kontrolü
-                        obscureText: true, //parola içeriği gizleme(*)
-                        decoration: const InputDecoration(
-                          //input kutucuğu özelleştirme
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                                Radius.zero), //kutucuk kenarları ovalliği 0
+                            hintText: '(5--)',
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFCC4646)),
-                            borderRadius: BorderRadius.all(Radius.zero),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white, //kutucuk rengi
-                          contentPadding: EdgeInsets.symmetric(
-                            //text ve kutucuk arasındaki dikey mesafe
-                            vertical: 3.0,
-                          ),
-                          hintText: '***',
+                          validator: (value) {
+                            //tam ad input girilip girilmediğini kontrol eder
+                            if (value == null || value.isEmpty) {
+                              setState(() {
+                                _showPhoneNumberWarning = true;
+                              });
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          //parola input girilip girilmediğini kontrol eder
-                          if (value == null || value.isEmpty) {
-                            return 'Lütfen parolanızı girin'; //parola girilmediyse bu mesaj iletilir
-                          }
-                          return null; //parola geçerli
-                        },
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(
-                      height: 30), //son kutucuk ve buton arasındaki mesafe
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: ElevatedButton(
-                      onPressed: _signUp,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color(0xFFCC4646), //kaydol butonu rengi
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              20.0), //kaydol butonu kenarlarının ovalliği
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            //buton ve kaydol yazısı arasındaki dikey ve yatay mesafe
-                            vertical: 5,
-                            horizontal: 30),
-                      ),
-                      child: const Text(
-                        'Kaydol',
-                        style: TextStyle(
-                            //text özelleştirme
-                            fontSize: 20, //yazı boyutu
-                            fontFamily: 'Calibri', //yazı tipi
-                            fontWeight: FontWeight.w500, //yazı kalınlaştırma
-
-                            color: Colors.white //yazı rengi
+                        if (_showPhoneNumberWarning)
+                          const Text(
+                            'Lütfen telefon numarası girin',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
                             ),
-                        textAlign: TextAlign.left,
+                          ),
+                        const SizedBox(
+                            height:
+                                10), //2. kutucuk ve 3. text arasındaki mesafe
+                        const Text(
+                          "Eposta",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontFamily: 'Times New Roman',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+
+                        TextFormField(
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman',
+                          ),
+                          controller:
+                              _emailController, //e-mail içeriği kontrolü
+                          keyboardType: TextInputType.emailAddress, //input tipi
+                          decoration: const InputDecoration(
+                            //input kutucuğu özelleştirme
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                  10)), //kutucuk kenarları ovalliği 0
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFCC4646)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromRGBO(
+                                255, 255, 255, 0.7), //kutucuk rengi
+                            contentPadding: EdgeInsets.symmetric(
+                                //input ve kutucuk arasındaki dikey mesafe
+                                vertical: 3.0,
+                                horizontal: 10),
+                            hintText: 'name@gmail.com',
+                          ),
+                          validator: (value) {
+                            //tam ad input girilip girilmediğini kontrol eder
+                            if (value == null || value.isEmpty) {
+                              setState(() {
+                                _showEmailWarning = true;
+                              });
+                            } else if (!value.contains('@')) {
+                              return 'Geçerli bir e-posta adresi girin'; //@ işaretini içermezse bu mesaj iletilir
+                            }
+                            return null;
+                          },
+                        ),
+                        if (_showEmailWarning)
+                          const Text(
+                            'Lütfen eposta adresi girin',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+
+                        const SizedBox(
+                            height:
+                                10), //3. kutucuk ve 4. text arasındaki mesafe
+                        const Text(
+                          "Parola",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontFamily: 'Times New Roman',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+
+                        TextFormField(
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman',
+                          ),
+                          controller:
+                              _passwordController, //parola içeriği kontrolü
+                          obscureText: true, //parola içeriği gizleme(*)
+                          decoration: const InputDecoration(
+                            //input kutucuğu özelleştirme
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                  10)), //kutucuk kenarları ovalliği 0
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFCC4646)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromRGBO(
+                                255, 255, 255, 0.7), //kutucuk rengi
+                            contentPadding: EdgeInsets.symmetric(
+                              //text ve kutucuk arasındaki dikey mesafe
+                              vertical: 3.0,
+                              horizontal: 10,
+                            ),
+                            hintText: '***',
+                          ),
+                          validator: (value) {
+                            //tam ad input girilip girilmediğini kontrol eder
+                            if (value == null || value.isEmpty) {
+                              setState(() {
+                                _showPasswordWarning = true;
+                              });
+                            }
+                            return null;
+                          },
+                        ),
+                        if (_showPasswordWarning)
+                          const Text(
+                            'Lütfen parola girin',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    const SizedBox(
+                        height: 30), //son kutucuk ve buton arasındaki mesafe
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: ElevatedButton(
+                        onPressed: _signUp,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color(0xFFCC4646), //kaydol butonu rengi
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                10.0), //kaydol butonu kenarlarının ovalliği
+                          ),
+                          minimumSize: const Size(180, 50),
+                        ),
+                        child: const Text(
+                          'Kaydol',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontFamily: 'Times New Roman',
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white //yazı rengi
+                              ),
+                          textAlign: TextAlign.left,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -459,20 +510,29 @@ class _MyFormState extends State<RegisterUser> {
         if (user != null) {
           final ownerUserId = FirebaseAuth.instance.currentUser!.uid;
 
-          _firestore.createNewUser(
+          await _firestore.createNewUser(
             ownerUserId: ownerUserId,
-            name: _nameController.text,
-            lastName: _lastNameController.text,
+            documentId:
+                ownerUserId, // Belge ID'si olarak kullanıcı ID'sini ayarlayın
+            name: _fullNameController.text,
             phoneNumber: _phoneNumberController.text,
             birthDate: _birthDateController.text,
             blood: _bloodTypeController.text,
           );
-
+          userCreatedDialog(context, "user is succesfully created");
           print("user is succesfully created");
           print(user.toString());
           // ignore: use_build_context_synchronously
           Navigator.pushNamedAndRemoveUntil(
               context, loginPageRoute, (route) => false);
+          setState(() {
+            _emailController.clear();
+            _passwordController.clear();
+            _fullNameController.clear();
+            _phoneNumberController.clear();
+            _bloodTypeController.clear();
+            _birthDateController.clear();
+          });
         }
       } catch (e) {
         if (e is FirebaseAuthException) {
@@ -488,6 +548,14 @@ class _MyFormState extends State<RegisterUser> {
             // Handle other FirebaseAuthException errors
             print('Firebase Authentication Error: ${e.message}');
           }
+          setState(() {
+            _emailController.clear();
+            _passwordController.clear();
+            _fullNameController.clear();
+            _phoneNumberController.clear();
+            _bloodTypeController.clear();
+            _birthDateController.clear();
+          });
         } else {
           // Handle other non-FirebaseAuthException errors
           print('Error: $e');

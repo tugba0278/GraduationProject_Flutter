@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-
 import 'package:bitirme_projesi/firebase_options.dart';
 import 'package:bitirme_projesi/routes.dart';
 import 'package:bitirme_projesi/pages/login_page.dart';
