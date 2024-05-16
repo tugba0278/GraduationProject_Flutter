@@ -59,13 +59,48 @@ class FirebaseCloudStorage {
   // U: A function to update fullname
   Future<void> updateFullName({
     required documentId,
-    required String name,
-    required String lastname,
+    required String fullName,
+  }) async {
+    try {
+      await users.doc(documentId).update({nameFieldName: fullName});
+    } catch (e) {
+      throw CouldNotUpdateFullNameException();
+    }
+  }
+
+  // U: A function to update donation date
+  Future<void> updateLastBloodDonationDate({
+    required documentId,
+    required String lastBloodDonation,
   }) async {
     try {
       await users
           .doc(documentId)
-          .update({nameFieldName: name, lastNameFieldName: lastname});
+          .update({lastBloodDonationDateFieldName: lastBloodDonation});
+    } catch (e) {
+      throw CouldNotUpdateFullNameException();
+    }
+  }
+
+  // U: A function to update kilo
+  Future<void> updateKilo({
+    required documentId,
+    required String kilo,
+  }) async {
+    try {
+      await users.doc(documentId).update({kiloFieldName: kilo});
+    } catch (e) {
+      throw CouldNotUpdateFullNameException();
+    }
+  }
+
+  // U: A function to update kilo
+  Future<void> updateDiseaseInfo({
+    required documentId,
+    required String diseaseInfo,
+  }) async {
+    try {
+      await users.doc(documentId).update({diseaseInfoFieldName: diseaseInfo});
     } catch (e) {
       throw CouldNotUpdateFullNameException();
     }

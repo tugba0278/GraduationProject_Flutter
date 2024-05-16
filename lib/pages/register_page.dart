@@ -51,13 +51,6 @@ class _MyFormState extends State<RegisterUser> {
     super.dispose();
   }
 
-  bool _showNameWarning = false;
-  bool _showBirthDateWarning = false;
-  bool _showBloodWarning = false;
-  bool _showPhoneNumberWarning = false;
-  bool _showEmailWarning = false;
-  bool _showPasswordWarning = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,14 +74,6 @@ class _MyFormState extends State<RegisterUser> {
         onTap: () {
           // Boş bir alana tıklandığında uyarıları kaldır
           FocusScope.of(context).unfocus();
-          setState(() {
-            _showNameWarning = false;
-            _showEmailWarning = false;
-            _showPasswordWarning = false;
-            _showPhoneNumberWarning = false;
-            _showBloodWarning = false;
-            _showBirthDateWarning = false;
-          });
         },
         child: SingleChildScrollView(
           //overflow engellenir
@@ -151,21 +136,12 @@ class _MyFormState extends State<RegisterUser> {
                           validator: (value) {
                             //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              setState(() {
-                                _showNameWarning = true;
-                              });
+                              return 'Lütfen ad soyad girin';
                             }
                             return null;
                           },
                         ),
-                        if (_showNameWarning) // Ad soyad uyarısı
-                          const Text(
-                            'Lütfen ad soyad girin',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                            ),
-                          ),
+
                         const SizedBox(height: 10),
                         const Text(
                           "Doğum Tarihi ",
@@ -209,21 +185,12 @@ class _MyFormState extends State<RegisterUser> {
                           validator: (value) {
                             //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              setState(() {
-                                _showBirthDateWarning = true;
-                              });
+                              return 'Lütfen doğum tarihi girin';
                             }
                             return null;
                           },
                         ),
-                        if (_showBirthDateWarning)
-                          const Text(
-                            'Lütfen doğum tarihi girin',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                            ),
-                          ),
+
                         const SizedBox(height: 10),
                         const Text(
                           "Kan Grubu",
@@ -262,21 +229,11 @@ class _MyFormState extends State<RegisterUser> {
                           validator: (value) {
                             //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              setState(() {
-                                _showBloodWarning = true;
-                              });
+                              return 'Lütfen kan grubu girin';
                             }
                             return null;
                           },
                         ),
-                        if (_showBloodWarning)
-                          const Text(
-                            'Lütfen kan grubu girin',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                            ),
-                          ),
 
                         const SizedBox(height: 10),
                         const Text(
@@ -321,21 +278,12 @@ class _MyFormState extends State<RegisterUser> {
                           validator: (value) {
                             //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              setState(() {
-                                _showPhoneNumberWarning = true;
-                              });
+                              return 'Lütfen telefon numarası girin';
                             }
                             return null;
                           },
                         ),
-                        if (_showPhoneNumberWarning)
-                          const Text(
-                            'Lütfen telefon numarası girin',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                            ),
-                          ),
+
                         const SizedBox(
                             height:
                                 10), //2. kutucuk ve 3. text arasındaki mesafe
@@ -380,23 +328,15 @@ class _MyFormState extends State<RegisterUser> {
                           validator: (value) {
                             //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              setState(() {
-                                _showEmailWarning = true;
-                              });
+                              if (value == null || value.isEmpty) {
+                                return 'Lütfen eposta adresi girin';
+                              }
                             } else if (!value.contains('@')) {
                               return 'Geçerli bir e-posta adresi girin'; //@ işaretini içermezse bu mesaj iletilir
                             }
                             return null;
                           },
                         ),
-                        if (_showEmailWarning)
-                          const Text(
-                            'Lütfen eposta adresi girin',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                            ),
-                          ),
 
                         const SizedBox(
                             height:
@@ -443,21 +383,11 @@ class _MyFormState extends State<RegisterUser> {
                           validator: (value) {
                             //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              setState(() {
-                                _showPasswordWarning = true;
-                              });
+                              return 'Lütfen parola girin';
                             }
                             return null;
                           },
                         ),
-                        if (_showPasswordWarning)
-                          const Text(
-                            'Lütfen parola girin',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 12,
-                            ),
-                          ),
                       ],
                     ),
 
