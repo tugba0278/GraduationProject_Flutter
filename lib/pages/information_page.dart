@@ -1,3 +1,4 @@
+import 'package:bitirme_projesi/routes.dart';
 import 'package:bitirme_projesi/services/cloud_database/firebase_cloud_user_crud.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +52,7 @@ class _InformationState extends State<Information> {
                     fit: BoxFit.contain)),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
-                  20, 230, 20, 20), //her taraftan bırakılan mesafe ,)
+                  50, 200, 20, 50), //her taraftan bırakılan mesafe ,)
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -59,25 +60,19 @@ class _InformationState extends State<Information> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          "Daha önce hastalık geçirdiniz mi?",
-                          style: TextStyle(
-                              fontSize: 27, //yazı boyutu
-
-                              fontFamily: 'Arial',
-                              fontWeight: FontWeight.bold //yazı tipi
-                              ),
-                        ),
+                        const Text("Daha önce hastalık geçirdiniz mi?",
+                            style: TextStyle(
+                              fontSize: 25,
+                              fontFamily: 'Times New Roman',
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.left),
                         const SizedBox(
                             height: 7), //text ve textformfield arası mesafe
                         TextFormField(
                           style: const TextStyle(
-                            //E-mail textformfield wdiget özelleştirme
-                            fontSize: 20, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Arial', //yazı tipi
-
-                            color: Colors.black, //input yazı rengi
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman', //input yazı rengi
                           ),
                           controller: _firstTextController,
                           keyboardType: TextInputType.text, //inputun tipi
@@ -87,23 +82,25 @@ class _InformationState extends State<Information> {
                                 borderSide: BorderSide(
                                     color: Colors.black,
                                     width: 50.0), //kenarlık rengi ve kalınlığı
-                                borderRadius: BorderRadius.all(Radius
-                                    .zero), // input kutucuğunun köşeli olmasını sağlar
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    10)), // input kutucuğunun köşeli olmasını sağlar
                               ),
                               //kutucuğa tıklandığındaki görünüm
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Color(0xFFCC4646)),
-                                borderRadius: BorderRadius.all(Radius.zero),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
                               ),
                               filled: true, //kutucuk doldurulması için onay
-                              fillColor: Colors
-                                  .white, // input kutucuğunun arka plan rengi
+                              fillColor: Color.fromRGBO(255, 255, 255,
+                                  0.7), // input kutucuğunun arka plan rengi
                               contentPadding: EdgeInsets.symmetric(
                                 //input kutucuğunun yüksekliği
                                 vertical: 5.0,
+                                horizontal: 10,
                               ),
-                              hintText: '  Var/Yok'),
+                              hintText: '  Evet/Hayır'),
                           validator: (value) {
                             //input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
@@ -114,23 +111,19 @@ class _InformationState extends State<Information> {
                         ),
                         const SizedBox(
                             height: 35), //textboxlar arasındaki mesafe
-                        const Text(
-                          "En son ne zaman kan verdiniz?",
-                          style: TextStyle(
-                              //text widget özelleştirme
-                              fontSize: 27, //yazı boyutu
-
-                              fontFamily: 'Arial', //yazı
-                              fontWeight: FontWeight.bold),
-                        ),
+                        const Text("En son ne zaman kan verdiniz?",
+                            style: TextStyle(
+                              fontSize: 25, //yazı boyutu
+                              fontFamily: 'Times New Roman',
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.left),
                         const SizedBox(
                             height: 5), //text ve textformfield arası mesafe
                         TextFormField(
                           style: const TextStyle(
-                            //textformfield widget özelleştirme
-                            fontSize: 20, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Arial', //yazı tipi
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman',
                           ),
                           readOnly: true,
                           onTap: () {
@@ -143,21 +136,23 @@ class _InformationState extends State<Information> {
                                 borderSide: BorderSide(
                                     color: Colors.black,
                                     width: 50.0), //kenarlık rengi ve kalınlığı
-                                borderRadius: BorderRadius.all(Radius
-                                    .zero), //input kutucuğunun köşeli olması sağlanır
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    10)), //input kutucuğunun köşeli olması sağlanır
                               ),
                               //kutucuğa tıklandığındaki görünüm
                               focusedBorder: OutlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Color(0xFFCC4646)),
-                                borderRadius: BorderRadius.all(Radius.zero),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
                               ),
                               filled: true,
-                              fillColor: Colors
-                                  .white, //input kutucuğunun arka plan rengi
+                              fillColor: Color.fromRGBO(255, 255, 255,
+                                  0.7), //input kutucuğunun arka plan rengi
                               contentPadding: EdgeInsets.symmetric(
                                 //input kutucuğunun yüksekliği
                                 vertical: 5.0,
+                                horizontal: 10,
                               ),
                               hintText: '  GG/AA/YY'),
                           validator: (value) {
@@ -171,23 +166,19 @@ class _InformationState extends State<Information> {
 
                         const SizedBox(
                             height: 35), //textboxlar arasındaki mesafe
-                        const Text(
-                          "Kilonuzu giriniz",
-                          style: TextStyle(
-                            //text widget özelleştirme
-                            fontSize: 27, //yazı boyutu
-                            fontWeight: FontWeight.bold, //yazı kalın yapma
-                            fontFamily: 'Arial', //yazı tipi
-                          ),
-                        ),
+                        const Text("Kilonuzu giriniz",
+                            style: TextStyle(
+                              fontSize: 25, //yazı boyutu
+                              fontFamily: 'Times New Roman',
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.left),
                         const SizedBox(
                             height: 5), //text ve textformfield arası mesafe
                         TextFormField(
                           style: const TextStyle(
-                            //textformfield widget özelleştirme
-                            fontSize: 20, //yazı boyutu
-                            fontStyle: FontStyle.italic, //yazı italik yapma
-                            fontFamily: 'Arial', //yazı tipi
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman',
                           ),
                           controller: _thirdTextController,
                           decoration: const InputDecoration(
@@ -196,13 +187,14 @@ class _InformationState extends State<Information> {
                               borderSide: BorderSide(
                                   color: Colors.black,
                                   width: 50.0), //kenarlık rengi ve kalınlığı
-                              borderRadius: BorderRadius.all(Radius
-                                  .zero), //input kutucuğunun köşeli olması sağlanır
+                              borderRadius: BorderRadius.all(Radius.circular(
+                                  10)), //input kutucuğunun köşeli olması sağlanır
                             ),
                             //kutucuğa tıklandığındaki görünüm
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFFCC4646)),
-                              borderRadius: BorderRadius.all(Radius.zero),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             filled: true,
                             fillColor: Colors
@@ -210,6 +202,7 @@ class _InformationState extends State<Information> {
                             contentPadding: EdgeInsets.symmetric(
                               //input kutucuğunun yüksekliği
                               vertical: 5.0,
+                              horizontal: 10,
                             ),
                             hintText: '  50 (kg)',
                           ),
@@ -232,18 +225,16 @@ class _InformationState extends State<Information> {
                           //ileri butonu
                           onPressed: _updateField,
                           style: ElevatedButton.styleFrom(
-                              //butonu özelleştirme
-                              backgroundColor: const Color(
-                                  0xFFCC4646), //ileri butonunun arka plan rengi
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    20.0), //ileri butonunun köşe ovalliği
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                  //butonun yazı ile arasındaki mesafe
-                                  vertical: 5, //dikeyde
-                                  horizontal: 30) //yatayda
-                              ),
+                            //butonu özelleştirme
+                            backgroundColor: const Color(
+                                0xFFCC4646), //ileri butonunun arka plan rengi
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  10.0), //ileri butonunun köşe ovalliği
+                            ),
+                            minimumSize:
+                                const Size(120, 45), // Sabit boyut tanımı
+                          ),
                           child: const Text(
                             'İleri',
                             style: TextStyle(
@@ -285,6 +276,8 @@ class _InformationState extends State<Information> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Veriler başarıyla kaydedildi.')),
       );
+      Navigator.pushNamedAndRemoveUntil(
+          context, homePageRoute, (route) => false);
     }
     setState(() {
       _firstTextController.clear();
