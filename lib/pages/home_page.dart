@@ -55,8 +55,10 @@ class _HomePageState extends State<HomePage> {
         _searchFocus.unfocus();
       },
       child: Scaffold(
+        backgroundColor: const Color(0xFFFAF5EF),
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          backgroundColor: const Color(0xFFFAF5EF),
           leading: Builder(
             builder: (context) => IconButton(
               color: Colors.black,
@@ -83,11 +85,13 @@ class _HomePageState extends State<HomePage> {
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: Color(0xFFCC4646)),
+                  borderSide:
+                      const BorderSide(color: Color(0xFFCC4646), width: 2),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: Color(0xFFCC4646)),
+                  borderSide:
+                      const BorderSide(color: Color(0xFFCC4646), width: 2),
                 ),
                 prefixIcon: const Icon(Icons.search),
               ),
@@ -120,6 +124,7 @@ class _HomePageState extends State<HomePage> {
                   case 1:
                     iconData = Icons.account_circle;
                     title = "Kullanıcı Profili";
+                    break;
                   case 2:
                     iconData = Icons.calendar_today;
                     title = 'Randevu Sistemi';
@@ -147,6 +152,7 @@ class _HomePageState extends State<HomePage> {
                   default:
                     iconData = Icons.circle;
                     title = 'Unknown';
+                    break;
                 }
                 return ListTile(
                   leading: Icon(
@@ -173,9 +179,12 @@ class _HomePageState extends State<HomePage> {
                           loginPageRoute,
                           (_) => false,
                         );
-                      } else {
-                        // Diğer menü öğelerine tıklandığında yapılacak işlemler işlemler
                       }
+                    } else if (index == 4) {
+                      Navigator.pushNamed(context, '/inform/');
+                      print(
+                          "index burada!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                      print(index);
                     }
                   },
                 );
@@ -225,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         minimumSize: const Size(150, 50),
-                        elevation: 6),
+                        elevation: 8),
                     child: const Text(
                       'Randevu',
                       style: TextStyle(
@@ -249,7 +258,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       minimumSize: const Size(150, 50),
-                      elevation: 6,
+                      elevation: 8,
                     ),
                     child: const Text(
                       'Harita',
@@ -279,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                             color: Color(0xFFCC4646), width: 1.5),
                       ),
                       minimumSize: const Size(150, 50),
-                      elevation: 6,
+                      elevation: 8,
                     ),
                     child: const Text(
                       'Ödülünüz',
@@ -292,7 +301,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // İkinci butona basıldığında yapılacak işlemler
+                      Navigator.pushNamed(context, "/inform/");
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -302,7 +311,7 @@ class _HomePageState extends State<HomePage> {
                             color: Color(0xFFCC4646), width: 1.5),
                       ),
                       minimumSize: const Size(150, 50),
-                      elevation: 6,
+                      elevation: 8,
                     ),
                     child: const Text(
                       'Bilgilendirme',
@@ -332,7 +341,7 @@ class _HomePageState extends State<HomePage> {
                             color: Color(0xFFCC4646), width: 1.5),
                       ),
                       minimumSize: const Size(150, 50),
-                      elevation: 6,
+                      elevation: 8,
                     ),
                     child: const Text(
                       'Geri Bildirim Sistemi',
