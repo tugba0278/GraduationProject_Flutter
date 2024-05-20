@@ -54,7 +54,7 @@ class _AboutPageState extends State<AboutPage> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(top: 50.0, left: 30),
+              padding: EdgeInsets.only(top: 50.0, left: 17),
               child: Text(
                 'Neyi Amaçlıyoruz?',
                 style: TextStyle(
