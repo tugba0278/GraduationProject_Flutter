@@ -1,4 +1,5 @@
 import 'package:bitirme_projesi/pages/about.dart';
+import 'package:bitirme_projesi/pages/feedback.dart';
 import 'package:bitirme_projesi/pages/inform.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,6 +11,7 @@ import 'package:bitirme_projesi/pages/information_page.dart';
 import 'package:bitirme_projesi/pages/home_page.dart';
 import 'package:bitirme_projesi/pages/inform.dart';
 import 'package:bitirme_projesi/pages/about.dart';
+import 'package:bitirme_projesi/pages/feedback.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +33,7 @@ class MyApp extends StatelessWidget {
         informationPageRoute: (context) => const Information(),
         homePageRoute: (context) => const HomePage(),
         informPageRoute: (context) => const InformPage(),
+        feedbackPageRoute: (context) => const FeedbackPage(),
         aboutPageRoute: (context) => const AboutPage(),
       },
     );

@@ -186,8 +186,8 @@ class _HomePageState extends State<HomePage> {
                           "index burada!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                       print(index);
                     } else if (index == 5) {
-                      // Navigator.pushNamed(context, '/inform/');
-                      // print(index);
+                      Navigator.pushNamed(context, '/feedback/');
+                      print(index);
                     } else if (index == 6) {
                       Navigator.pushNamed(context, '/about/');
                       print(index);
@@ -337,7 +337,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // İlk butona basıldığında yapılacak işlemler
+                      Navigator.pushNamed(context, '/feedback/');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

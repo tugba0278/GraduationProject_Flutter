@@ -37,12 +37,16 @@ class _InformationState extends State<Information> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GestureDetector(
-        onTap: () {
-          // Boş bir alana tıklandığında uyarıları kaldır
-          FocusScope.of(context).unfocus();
-        },
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 20, vertical: 20), // Kenarlara boşluk ekleyin
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+
+        child: GestureDetector(
+          onTap: () {
+            // Boş bir alana tıklandığında uyarıları kaldır
+            FocusScope.of(context).unfocus();
+          },
           //overflow engellemek için
           child: Container(
             decoration: const BoxDecoration(

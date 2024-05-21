@@ -106,6 +106,34 @@ class FirebaseCloudStorage {
     }
   }
 
+  // U: A function to update only the comment field
+  Future<void> updateComment({
+    required String documentId,
+    required String comment,
+  }) async {
+    try {
+      await users.doc(documentId).update({
+        commentFieldName: comment,
+      });
+    } catch (e) {
+      throw CouldNotUpdateFullNameException();
+    }
+  }
+
+  // U: A function to update only the comment field
+  Future<void> updateScore({
+    required String documentId,
+    required String score,
+  }) async {
+    try {
+      await users.doc(documentId).update({
+        scoreFieldName: score,
+      });
+    } catch (e) {
+      throw CouldNotUpdateFullNameException();
+    }
+  }
+
   // U: A function to update a given field
   Future<void> updateField({
     required documentId,

@@ -9,4 +9,6 @@ const bloodFieldName = "blood";
 const diseaseInfoFieldName = "diseaseInfo";
 const lastBloodDonationDateFieldName = "lastBloodDonation";
 const kiloFieldName = "kilo";
+const commentFieldName = "comment";
+const scoreFieldName = "score";
 const adressFieldName = "adress";

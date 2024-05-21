@@ -70,13 +70,15 @@ class _MyFormState extends State<RegisterUser> {
           color: const Color(0xFFCC4646),
         ),
       ),
-      body: GestureDetector(
-        onTap: () {
-          // Boş bir alana tıklandığında uyarıları kaldır
-          FocusScope.of(context).unfocus();
-        },
-        child: SingleChildScrollView(
-          //overflow engellenir
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 20, vertical: 20), // Kenarlara boşluk ekleyin
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        child: GestureDetector(
+          onTap: () {
+            // Boş bir alana tıklandığında uyarıları kaldır
+            FocusScope.of(context).unfocus();
+          },
           child: Container(
             decoration: const BoxDecoration(
                 image: DecorationImage(
