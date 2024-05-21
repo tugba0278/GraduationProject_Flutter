@@ -278,7 +278,10 @@ class _InformationState extends State<Information> {
           documentId: userId, kilo: _thirdTextController.text);
       // Veritabanına ekleme işlemi tamamlandığında kullanıcıya bildirim göster
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veriler başarıyla kaydedildi.')),
+        const SnackBar(
+          content: Text('Veriler başarıyla kaydedildi.'),
+          backgroundColor: Color(0xFF504658),
+        ),
       );
       Navigator.pushNamedAndRemoveUntil(
           context, homePageRoute, (route) => false);

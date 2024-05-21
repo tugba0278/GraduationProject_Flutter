@@ -180,6 +180,11 @@ class _HomePageState extends State<HomePage> {
                           (_) => false,
                         );
                       }
+                    } else if (index == 1) {
+                      Navigator.pushNamed(context, '/user-profile/');
+                      print(
+                          "index burada!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                      print(index);
                     } else if (index == 4) {
                       Navigator.pushNamed(context, '/inform/');
                       print(

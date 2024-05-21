@@ -25,7 +25,7 @@ class _AboutPageState extends State<AboutPage> {
           },
         ),
         title: const Padding(
-          padding: EdgeInsets.only(left: 60),
+          padding: EdgeInsets.only(left: 70),
           child: Text(
             'Hakkımızda',
             textAlign: TextAlign.center,
