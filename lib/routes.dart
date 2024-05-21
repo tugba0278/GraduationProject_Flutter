@@ -1,3 +1,4 @@
+const splashPageRoute = "/splash/";
 const loginPageRoute = "/login/";
 const registerPageRoute = "/register/";
 const informationPageRoute = "/information/";

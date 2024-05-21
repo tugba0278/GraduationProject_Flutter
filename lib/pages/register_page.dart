@@ -80,6 +80,7 @@ class _MyFormState extends State<RegisterUser> {
             FocusScope.of(context).unfocus();
           },
           child: Container(
+            alignment: Alignment.center,
             decoration: const BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("lib/assets/background_image.png"),
@@ -87,7 +88,7 @@ class _MyFormState extends State<RegisterUser> {
                     fit: BoxFit.contain)),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
-                  50, 40, 50, 20), //her taraftan bırakılan mesafe ,)
+                  50, 10, 50, 20), //her taraftan bırakılan mesafe ,)
               child: Form(
                 //form widgeti
                 key: _formKey, //kontrolü sağlamak için anahtar

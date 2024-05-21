@@ -1,6 +1,7 @@
 import 'package:bitirme_projesi/pages/about_page.dart';
 import 'package:bitirme_projesi/pages/feedback_page.dart';
 import 'package:bitirme_projesi/pages/inform_page.dart';
+import 'package:bitirme_projesi/pages/splash_page.dart';
 import 'package:bitirme_projesi/pages/user_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,8 +28,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: loginPageRoute, // Set the initial route
+      initialRoute: splashPageRoute, // Set the initial route
       routes: {
+        splashPageRoute: (context) => const SplashScreen(),
         loginPageRoute: (context) => const LoginUser(),
         registerPageRoute: (context) => const RegisterUser(),
         informationPageRoute: (context) => const Information(),
