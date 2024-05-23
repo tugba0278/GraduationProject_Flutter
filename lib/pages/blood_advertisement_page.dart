@@ -164,7 +164,7 @@ class _BloodAdvertisementPageState extends State<BloodAdvertisementPage> {
                                 onPressed: () {
                                   deleteDocumentByFields(userId, docData);
                                 },
-                                child: Text('Karşılandı'),
+                                child: const Text('Karşılandı'),
                               ),
                             ],
                           ),
