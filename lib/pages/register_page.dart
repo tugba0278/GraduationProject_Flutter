@@ -47,9 +47,15 @@ class _MyFormState extends State<RegisterUser> {
     _passwordController.dispose();
     _bloodTypeController.dispose();
     _birthDateController.dispose();
-
     super.dispose();
   }
+
+  bool _showNameWarning = false;
+  bool _showBirthDateWarning = false;
+  bool _showBloodWarning = false;
+  bool _showPhoneNumberWarning = false;
+  bool _showEmailWarning = false;
+  bool _showPasswordWarning = false;
 
   @override
   Widget build(BuildContext context) {
@@ -70,22 +76,29 @@ class _MyFormState extends State<RegisterUser> {
           color: const Color(0xFFCC4646),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 20), // Kenarlara boşluk ekleyin
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        child: GestureDetector(
-          onTap: () {
-            // Boş bir alana tıklandığında uyarıları kaldır
-            FocusScope.of(context).unfocus();
-          },
-          child: Container(
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("lib/assets/background_image.png"),
-                    alignment: Alignment.center,
-                    fit: BoxFit.contain)),
+      body: GestureDetector(
+        onTap: () {
+          // Boş bir alana tıklandığında uyarıları kaldır
+          FocusScope.of(context).unfocus();
+          setState(() {
+            _showNameWarning = false;
+            _showBirthDateWarning = false;
+            _showBloodWarning = false;
+            _showPhoneNumberWarning = false;
+            _showEmailWarning = false;
+            _showPasswordWarning = false;
+          });
+        },
+        child: Container(
+          margin: const EdgeInsets.only(top: 0),
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("lib/assets/background_image.png"),
+                  alignment: Alignment.center,
+                  fit: BoxFit.contain)),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
                   50, 10, 50, 20), //her taraftan bırakılan mesafe ,)
@@ -139,11 +152,27 @@ class _MyFormState extends State<RegisterUser> {
                           validator: (value) {
                             //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              return 'Lütfen ad soyad girin';
+                              setState(() {
+                                _showNameWarning = true;
+                                _fullNameController.clear();
+                                _birthDateController.clear();
+                                _bloodTypeController.clear();
+                                _phoneNumberController.clear();
+                                _emailController.clear();
+                                _passwordController.clear();
+                              });
                             }
                             return null;
                           },
                         ),
+                        if (_showNameWarning)
+                          const Text(
+                            'Lütfen ad soyad girin',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
 
                         const SizedBox(height: 10),
                         const Text(
@@ -186,13 +215,28 @@ class _MyFormState extends State<RegisterUser> {
                             hintText: 'GG-AA-YY',
                           ),
                           validator: (value) {
-                            //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              return 'Lütfen doğum tarihi girin';
+                              setState(() {
+                                _showBirthDateWarning = true;
+                                _fullNameController.clear();
+                                _birthDateController.clear();
+                                _bloodTypeController.clear();
+                                _phoneNumberController.clear();
+                                _emailController.clear();
+                                _passwordController.clear();
+                              });
                             }
                             return null;
                           },
                         ),
+                        if (_showBirthDateWarning)
+                          const Text(
+                            'Lütfen doğum tarihi girin',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
 
                         const SizedBox(height: 10),
                         const Text(
@@ -230,13 +274,28 @@ class _MyFormState extends State<RegisterUser> {
                             hintText: 'Örneğin: A Rh+',
                           ),
                           validator: (value) {
-                            //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              return 'Lütfen kan grubu girin';
+                              setState(() {
+                                _showBloodWarning = true;
+                                _fullNameController.clear();
+                                _birthDateController.clear();
+                                _bloodTypeController.clear();
+                                _phoneNumberController.clear();
+                                _emailController.clear();
+                                _passwordController.clear();
+                              });
                             }
                             return null;
                           },
                         ),
+                        if (_showBloodWarning)
+                          const Text(
+                            'Lütfen kan grubu girin',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
 
                         const SizedBox(height: 10),
                         const Text(
@@ -279,13 +338,28 @@ class _MyFormState extends State<RegisterUser> {
                             hintText: '(5--)',
                           ),
                           validator: (value) {
-                            //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              return 'Lütfen telefon numarası girin';
+                              setState(() {
+                                _showPhoneNumberWarning = true;
+                                _fullNameController.clear();
+                                _birthDateController.clear();
+                                _bloodTypeController.clear();
+                                _phoneNumberController.clear();
+                                _emailController.clear();
+                                _passwordController.clear();
+                              });
                             }
                             return null;
                           },
                         ),
+                        if (_showPhoneNumberWarning)
+                          const Text(
+                            'Lütfen numara girin',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
 
                         const SizedBox(
                             height:
@@ -301,45 +375,59 @@ class _MyFormState extends State<RegisterUser> {
                         ),
 
                         TextFormField(
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontFamily: 'Times New Roman',
-                          ),
-                          controller:
-                              _emailController, //e-mail içeriği kontrolü
-                          keyboardType: TextInputType.emailAddress, //input tipi
-                          decoration: const InputDecoration(
-                            //input kutucuğu özelleştirme
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  10)), //kutucuk kenarları ovalliği 0
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontFamily: 'Times New Roman',
                             ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFCC4646)),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
+                            controller:
+                                _emailController, //e-mail içeriği kontrolü
+                            keyboardType:
+                                TextInputType.emailAddress, //input tipi
+                            decoration: const InputDecoration(
+                              //input kutucuğu özelleştirme
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(
+                                    10)), //kutucuk kenarları ovalliği 0
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xFFCC4646)),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                              ),
+                              filled: true,
+                              fillColor: Color.fromRGBO(
+                                  255, 255, 255, 0.7), //kutucuk rengi
+                              contentPadding: EdgeInsets.symmetric(
+                                  //input ve kutucuk arasındaki dikey mesafe
+                                  vertical: 3.0,
+                                  horizontal: 10),
+                              hintText: 'name@gmail.com',
                             ),
-                            filled: true,
-                            fillColor: Color.fromRGBO(
-                                255, 255, 255, 0.7), //kutucuk rengi
-                            contentPadding: EdgeInsets.symmetric(
-                                //input ve kutucuk arasındaki dikey mesafe
-                                vertical: 3.0,
-                                horizontal: 10),
-                            hintText: 'name@gmail.com',
-                          ),
-                          validator: (value) {
-                            //tam ad input girilip girilmediğini kontrol eder
-                            if (value == null || value.isEmpty) {
+                            validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Lütfen eposta adresi girin';
+                                setState(() {
+                                  _showEmailWarning = true;
+                                  _fullNameController.clear();
+                                  _birthDateController.clear();
+                                  _bloodTypeController.clear();
+                                  _phoneNumberController.clear();
+                                  _emailController.clear();
+                                  _passwordController.clear();
+                                });
+                              } else if (!value.contains('@')) {
+                                return 'Geçerli bir e-posta adresi girin'; //@ işaretini içermezse bu mesaj iletilir
                               }
-                            } else if (!value.contains('@')) {
-                              return 'Geçerli bir e-posta adresi girin'; //@ işaretini içermezse bu mesaj iletilir
-                            }
-                            return null;
-                          },
-                        ),
+                              return null;
+                            }),
+                        if (_showEmailWarning)
+                          const Text(
+                            'Lütfen e-mail girin',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
 
                         const SizedBox(
                             height:
@@ -384,13 +472,28 @@ class _MyFormState extends State<RegisterUser> {
                             hintText: '***',
                           ),
                           validator: (value) {
-                            //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              return 'Lütfen parola girin';
+                              setState(() {
+                                _showPasswordWarning = true;
+                                _fullNameController.clear();
+                                _birthDateController.clear();
+                                _bloodTypeController.clear();
+                                _phoneNumberController.clear();
+                                _emailController.clear();
+                                _passwordController.clear();
+                              });
                             }
                             return null;
                           },
                         ),
+                        if (_showPasswordWarning)
+                          const Text(
+                            'Lütfen şifre girin',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
                       ],
                     ),
 

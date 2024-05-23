@@ -41,7 +41,7 @@ class FirebaseCloudStorage {
     const String diseaseInfo = "";
     const String kilo = "";
     const String lastBloodDonationDate = "";
-    const String adress = "";
+    const String livingCity = "";
 
     await users.doc(documentId).set({
       ownerUserIdFieldName: ownerUserId,
@@ -52,7 +52,7 @@ class FirebaseCloudStorage {
       diseaseInfoFieldName: diseaseInfo,
       kiloFieldName: kilo,
       lastBloodDonationDateFieldName: lastBloodDonationDate,
-      adressFieldName: adress,
+      livingCityFieldName: livingCity,
     });
   }
 
@@ -129,6 +129,18 @@ class FirebaseCloudStorage {
       await users.doc(documentId).update({
         scoreFieldName: score,
       });
+    } catch (e) {
+      throw CouldNotUpdateFullNameException();
+    }
+  }
+
+  // U: A function to update donation date
+  Future<void> updateLivingCity({
+    required documentId,
+    required String livingCity,
+  }) async {
+    try {
+      await users.doc(documentId).update({livingCityFieldName: livingCity});
     } catch (e) {
       throw CouldNotUpdateFullNameException();
     }

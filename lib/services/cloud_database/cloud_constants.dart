@@ -11,4 +11,4 @@ const lastBloodDonationDateFieldName = "lastBloodDonation";
 const kiloFieldName = "kilo";
 const commentFieldName = "comment";
 const scoreFieldName = "score";
-const adressFieldName = "adress";
+const livingCityFieldName = "living-city";

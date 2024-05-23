@@ -45,6 +45,7 @@ dependencies:
   video_player: ^2.8.6
   chewie: ^1.8.1
   appinio_video_player: ^1.2.2
+  table_calendar: ^3.0.8
   
 
 dev_dependencies:

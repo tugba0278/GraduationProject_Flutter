@@ -15,6 +15,8 @@ class _FeedbackState extends State<FeedbackPage> {
   final FirebaseCloudStorage _firestore = FirebaseCloudStorage();
   int _rating = 0; // Değişken for puanlama
 
+  bool _showCommentWarning = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,16 +42,17 @@ class _FeedbackState extends State<FeedbackPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 20), // Kenarlara boşluk ekleyin
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior
-            .onDrag, // Klavyenin sürüklenirken kapanmasını sağlayın
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context)
-                .unfocus(); // Dismiss keyboard when tapped outside
-          },
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context)
+              .unfocus(); // Dismiss keyboard when tapped outside
+          setState(() {
+            _showCommentWarning = false;
+          });
+        },
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -104,9 +107,9 @@ class _FeedbackState extends State<FeedbackPage> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               setState(() {
+                                _showCommentWarning = true;
                                 _rating = 0;
                               });
-                              return 'Yorum boş olamaz';
                             }
                             return null;
                           },
@@ -174,7 +177,7 @@ class _FeedbackState extends State<FeedbackPage> {
   }
 
   void _sendFeedback() async {
-    if (_formKey.currentState!.validate()) {
+    if (_feedbackController.text.isNotEmpty) {
       final userId = FirebaseAuth.instance.currentUser!.uid;
 
       await _firestore.updateComment(
@@ -195,6 +198,24 @@ class _FeedbackState extends State<FeedbackPage> {
           return AlertDialog(
             title: const Text('Başarılı!'),
             content: const Text('Geri bildiriminiz başarıyla gönderildi.'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Tamam'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Başarısız'),
+            content: const Text('Yorum boş olamaz!'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {

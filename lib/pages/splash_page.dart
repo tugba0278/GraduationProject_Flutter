@@ -1,6 +1,16 @@
+import 'package:bitirme_projesi/firebase_options.dart';
+import 'package:bitirme_projesi/pages/home_page.dart';
+import 'package:bitirme_projesi/pages/inform_page.dart';
+import 'package:bitirme_projesi/pages/information_page.dart';
+import 'package:bitirme_projesi/services/cloud_database/cloud_constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:bitirme_projesi/pages/login_page.dart';
+
+bool isFilledForm = false;
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -13,10 +23,13 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  final FirebaseFirestore _firestoreInstance = FirebaseFirestore.instance;
 
   @override
   void initState() {
     super.initState();
+    loadDiseaseInfo();
+
     _controller = AnimationController(
       vsync: this,
       duration:
@@ -33,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
     Timer(const Duration(seconds: 4), () {
       // Splash ekranın gösterim süresini 5 saniyeye çıkardım
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginUser()),
+        MaterialPageRoute(builder: (context) => const PreHomePage()),
       );
     });
   }
@@ -41,7 +54,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFAF5EF),
+      backgroundColor: const Color(0xFFFAF5EF),
       body: Container(
         //alignment: Alignment.center,
         padding: const EdgeInsets.only(top: 80),
@@ -49,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen>
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Transform.translate(
-              offset: Offset(0, 80), // Resmi 80 birim yukarı taşıdım
+              offset: const Offset(0, 80), // Resmi 80 birim yukarı taşıdım
               child: ScaleTransition(
                 scale: _animation,
                 child: Transform.scale(
@@ -89,5 +102,55 @@ class _SplashScreenState extends State<SplashScreen>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void loadDiseaseInfo() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userData = await _firestoreInstance
+          .collection(usersCollectionName)
+          .doc(user.uid)
+          .get();
+      if (userData.exists) {
+        setState(() {
+          if (userData[diseaseInfoFieldName] == "Evet" ||
+              userData[diseaseInfoFieldName] == "Hayır") {
+            isFilledForm = true;
+          }
+        });
+      } else {
+        print('Kullanıcı hastalık bilgisi bulunamadı.');
+      }
+    } else {
+      print('Kullanıcı girişi yapılmamış.');
+    }
+  }
+}
+
+class PreHomePage extends StatelessWidget {
+  const PreHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform),
+      builder: (context, snapshot) {
+        switch (snapshot.connectionState) {
+          case ConnectionState.done:
+            final user = FirebaseAuth.instance.currentUser;
+            if (user != null) {
+              if (isFilledForm) {
+                return const HomePage();
+              }
+              return const InformationPage();
+            } else {
+              return const LoginUserPage();
+            }
+          default:
+            return const CircularProgressIndicator();
+        }
+      },
+    );
   }
 }

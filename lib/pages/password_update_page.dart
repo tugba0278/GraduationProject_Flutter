@@ -1,31 +1,32 @@
 import 'package:bitirme_projesi/routes.dart';
-import 'package:bitirme_projesi/utilities/dialogs/user_not_found_dialog.dart';
+import 'package:bitirme_projesi/utilities/dialogs/password_not_updated_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginUserPage extends StatefulWidget {
-  const LoginUserPage({super.key});
+class PasswordUpdatePage extends StatefulWidget {
+  const PasswordUpdatePage({super.key});
 
   @override
-  State<LoginUserPage> createState() => _LoginUserPageState();
+  State<PasswordUpdatePage> createState() => _PasswordUpdatePageState();
 }
 
-class _LoginUserPageState extends State<LoginUserPage> {
+class _PasswordUpdatePageState extends State<PasswordUpdatePage> {
   final _formKey = GlobalKey<
       FormState>(); // formun durumunu yöneten bir anahtar (key) oluşturur(erişim sağlama,kontrol etme..)
-  final TextEditingController _passwordController =
-      TextEditingController(); //passwordun girileceği text metnin kontrolünü sağlar
-  final TextEditingController _emailController =
-      TextEditingController(); //e-mailin girileceği text metnin kontrolünü sağlar
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repPasswordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
+    _repPasswordController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   bool _showEmailWarning = false;
+  bool _showRepPasswordWarning = false;
   bool _showPasswordWarning = false;
 
   @override
@@ -34,51 +35,111 @@ class _LoginUserPageState extends State<LoginUserPage> {
       fontSize: 20,
       fontFamily: 'Times New Roman',
       fontWeight: FontWeight.w500,
-      color: Color(0xFFCC4646),
-    );
-    const buttonTextStyle2 = TextStyle(
-      fontSize: 20,
-      fontFamily: 'Times New Roman',
-      fontWeight: FontWeight.w500,
       color: Colors.white,
     );
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushNamedAndRemoveUntil(
+                context,
+                loginPageRoute,
+                (route) =>
+                    false); // Geri tuşuna basıldığında önceki sayfaya dön
+          },
+          iconSize: 50,
+          color: const Color(0xFFCC4646),
+        ),
+      ),
       body: GestureDetector(
         onTap: () {
           // Boş bir alana tıklandığında uyarıları kaldır
           FocusScope.of(context).unfocus();
           setState(() {
             _showEmailWarning = false;
+            _showRepPasswordWarning = false;
             _showPasswordWarning = false;
           });
         },
-        child: Container(
-          margin: const EdgeInsets.only(top: 80),
-          decoration: const BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage(
-              "lib/assets/background_image.png",
-            ),
-            alignment: Alignment.center,
-            fit: BoxFit.contain,
-          )),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+        child: SingleChildScrollView(
+          //overflow engellemek için
+          child: Container(
+            padding: EdgeInsets.fromLTRB(0, 150, 0, 0),
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage("lib/assets/background_image.png"),
+              alignment: Alignment.center,
+              fit: BoxFit.contain,
+            )),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
-                  50, 200, 50, 20), //her taraftan bırakılan mesafe ,)
+                  50, 0, 50, 20), //her taraftan bırakılan mesafe ,)
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      //e-mail için column
                       children: [
-                        const Text("Eposta",
+                        const Text("Email",
                             style: TextStyle(
-                              fontSize: 30,
+                              fontSize: 27,
+                              fontFamily: 'Times New Roman',
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.left),
+                        const SizedBox(height: 5),
+                        TextFormField(
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontFamily: 'Times New Roman',
+                          ),
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFCC4646)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromRGBO(255, 255, 255, 0.7),
+                            contentPadding: EdgeInsets.symmetric(
+                                vertical: 5.0, horizontal: 10),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              setState(() {
+                                _showEmailWarning = true;
+                                _repPasswordController.clear();
+                                _passwordController.clear();
+                                _emailController.clear();
+                              });
+                            }
+                            return null;
+                          },
+                        ),
+                        if (_showEmailWarning)
+                          const Text(
+                            'Lütfen email girin',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
+                        const SizedBox(height: 35),
+                        const Text("Mevcut Şifre",
+                            style: TextStyle(
+                              fontSize: 27,
                               fontFamily: 'Times New Roman',
                               fontWeight: FontWeight.bold,
                             ),
@@ -90,9 +151,9 @@ class _LoginUserPageState extends State<LoginUserPage> {
                             fontSize: 18,
                             fontFamily: 'Times New Roman',
                           ),
-                          controller: _emailController,
-                          keyboardType:
-                              TextInputType.emailAddress, //inputun tipi
+                          controller: _passwordController,
+                          obscureText: true, //parola girişinin içeriği gizlenir
+                          keyboardType: TextInputType.visiblePassword,
                           decoration: const InputDecoration(
                             //input kutucuğu özelleştirme
                             border: OutlineInputBorder(
@@ -118,20 +179,20 @@ class _LoginUserPageState extends State<LoginUserPage> {
                             ),
                           ),
                           validator: (value) {
-                            //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
                               setState(() {
-                                _showEmailWarning = true;
+                                _showPasswordWarning = true;
+                                _repPasswordController.clear();
+                                _passwordController.clear();
+                                _emailController.clear();
                               });
-                            } else if (!value.contains('@')) {
-                              return 'Geçerli bir e-posta adresi girin'; //@ işaretini içermezse bu mesaj iletilir
                             }
                             return null;
                           },
                         ),
-                        if (_showEmailWarning)
+                        if (_showPasswordWarning)
                           const Text(
-                            'Lütfen eposta adresi girin',
+                            'Lütfen parola girin',
                             style: TextStyle(
                               color: Color(0xFFCC4646),
                               fontSize: 12,
@@ -141,9 +202,9 @@ class _LoginUserPageState extends State<LoginUserPage> {
                             height: 35), //textboxlar arasındaki mesafe
                         const Text(
                             //Parola yazısı
-                            "Parola",
+                            "Yeni Şifre",
                             style: TextStyle(
-                              fontSize: 30, //yazı boyutu
+                              fontSize: 27, //yazı boyutu
                               fontFamily: 'Times New Roman',
                               fontWeight: FontWeight.bold,
                             ),
@@ -155,8 +216,9 @@ class _LoginUserPageState extends State<LoginUserPage> {
                             fontSize: 18,
                             fontFamily: 'Times New Roman',
                           ),
-                          controller: _passwordController,
+                          controller: _repPasswordController,
                           obscureText: true, //parola girişinin içeriği gizlenir
+                          keyboardType: TextInputType.visiblePassword,
                           decoration: const InputDecoration(
                             //input kutucuğu özelleştirme
                             border: OutlineInputBorder(
@@ -182,46 +244,25 @@ class _LoginUserPageState extends State<LoginUserPage> {
                             ),
                           ),
                           validator: (value) {
-                            //tam ad input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
                               setState(() {
-                                _showPasswordWarning = true;
+                                _showRepPasswordWarning = true;
+                                _repPasswordController.clear();
+                                _passwordController.clear();
+                                _emailController.clear();
                               });
                             }
                             return null;
                           },
                         ),
-                        if (_showPasswordWarning)
+                        if (_showRepPasswordWarning)
                           const Text(
-                            'Lütfen parola girin',
+                            'Lütfen parola tekrarını girin',
                             style: TextStyle(
                               color: Color(0xFFCC4646),
                               fontSize: 12,
                             ),
                           ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                              passwordPageRoute,
-                              (_) => false,
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 5,
-                                horizontal:
-                                    5), //buttonun yazı ile arasındaki mesafe
-                          ),
-                          child: const Text(
-                            //text için özelleştirme
-                            'Şifremi Unuttum',
-                            style: TextStyle(
-                              color: Colors.black, //yazı rengi
-                              fontSize: 15, //yazı boyutu
-                              fontFamily: 'calibri', //yazı tipi
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                     const SizedBox(height: 30),
@@ -229,33 +270,17 @@ class _LoginUserPageState extends State<LoginUserPage> {
                       mainAxisAlignment:
                           MainAxisAlignment.center, // yatayda merkeze hizalama
                       children: [
+                        const SizedBox(height: 100),
                         ElevatedButton(
-                          //giriş yap butonu
+                          ///güncelle butonu
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
                               final email = _emailController.text;
-                              final password = _passwordController.text;
-                              try {
-                                await FirebaseAuth.instance
-                                    .signInWithEmailAndPassword(
-                                  email: email,
-                                  password: password,
-                                );
-                                // ignore: use_build_context_synchronously
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    informationPageRoute, (route) => false);
-                              } catch (e) {
-                                print(e.toString());
-                                // Eğer Firebase kullanıcısını bulamazsa uyarıyı göster
-                                showUserNotFoundDialog(
-                                  context,
-                                  "Email veya şifreniz yanlıştır",
-                                );
-                                setState(() {
-                                  _emailController.clear();
-                                  _passwordController.clear();
-                                });
-                              }
+                              final currentPassword = _passwordController.text;
+                              final newPassword = _repPasswordController.text;
+
+                              _changePassword(
+                                  context, email, currentPassword, newPassword);
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -271,39 +296,9 @@ class _LoginUserPageState extends State<LoginUserPage> {
                           ),
 
                           child: const Text(
-                            'Giriş Yap',
-                            style: buttonTextStyle2,
+                            'Güncelle',
+                            style: buttonTextStyle,
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                        //butonu ile textbutton arası mesafe
-                        height: 20),
-                    Column(
-                      mainAxisAlignment:
-                          MainAxisAlignment.center, // yatayda merkeze hizalama
-                      children: [
-                        const SizedBox(height: 10), // Buttonlar arası mesafe
-                        ElevatedButton(
-                          // Kaydol button
-                          onPressed: () {
-                            Navigator.of(context).pushNamedAndRemoveUntil(
-                              registerPageRoute,
-                              (_) => false,
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                              side: const BorderSide(
-                                color: Color(0xFFCC4646),
-                              ),
-                            ),
-                            minimumSize: const Size(180, 50),
-                          ),
-                          child: const Text('Kaydol', style: buttonTextStyle),
                         ),
                       ],
                     ),
@@ -315,5 +310,30 @@ class _LoginUserPageState extends State<LoginUserPage> {
         ),
       ),
     );
+  }
+}
+
+void _changePassword(BuildContext context, String email, String currentPassword,
+    String newPassword) async {
+  try {
+    final userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: email,
+      password: currentPassword,
+    );
+
+    final user = userCredential.user;
+
+    if (user != null) {
+      await user.updatePassword(newPassword);
+
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil(loginPageRoute, (route) => false);
+    } else {
+      showNotUpdateDialog(context, "Şifre güncellenirken hata oluştu.");
+    }
+  } catch (error) {
+    showNotUpdateDialog(
+        context, "Şifre güncellenirken hata oluştu.Kullanıcı bulunamadı.");
   }
 }

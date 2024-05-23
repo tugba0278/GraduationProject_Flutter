@@ -1,17 +1,20 @@
+import 'package:bitirme_projesi/pages/home_page.dart';
 import 'package:bitirme_projesi/routes.dart';
+import 'package:bitirme_projesi/services/cloud_database/cloud_constants.dart';
 import 'package:bitirme_projesi/services/cloud_database/firebase_cloud_user_crud.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class Information extends StatefulWidget {
-  const Information({super.key});
+class InformationPage extends StatefulWidget {
+  const InformationPage({super.key});
 
   @override
-  State<Information> createState() => _InformationState();
+  State<InformationPage> createState() => _InformationPageState();
 }
 
-class _InformationState extends State<Information> {
+class _InformationPageState extends State<InformationPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _firstTextController = TextEditingController();
   late DateTime _secondText = DateTime.now();
@@ -34,29 +37,35 @@ class _InformationState extends State<Information> {
     super.dispose();
   }
 
+  bool _showDiseaseInfoWarning = false;
+  bool _showBloodDonationWarning = false;
+  bool _showKiloWarning = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 20, vertical: 20), // Kenarlara boşluk ekleyin
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-
-        child: GestureDetector(
-          onTap: () {
-            // Boş bir alana tıklandığında uyarıları kaldır
-            FocusScope.of(context).unfocus();
-          },
-          //overflow engellemek için
-          child: Container(
-            decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("lib/assets/background_image.png"),
-                    alignment: Alignment.center,
-                    fit: BoxFit.contain)),
+      body: GestureDetector(
+        onTap: () {
+          // Boş bir alana tıklandığında uyarıları kaldır
+          FocusScope.of(context).unfocus();
+          setState(() {
+            _showDiseaseInfoWarning = false;
+            _showBloodDonationWarning = false;
+            _showKiloWarning = false;
+          });
+        },
+        child: Container(
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("lib/assets/background_image.png"),
+                  alignment: Alignment.center,
+                  fit: BoxFit.contain)),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
-                  50, 200, 20, 50), //her taraftan bırakılan mesafe ,)
+                  50, 180, 20, 50), //her taraftan bırakılan mesafe ,)
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -106,13 +115,25 @@ class _InformationState extends State<Information> {
                               ),
                               hintText: '  Evet/Hayır'),
                           validator: (value) {
-                            //input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              return 'Lütfen yanıtlayınız..'; //girilmediyse bu mesaj iletilir
+                              setState(() {
+                                _showDiseaseInfoWarning = true;
+                                _firstTextController.clear();
+                                _secondTextController.clear();
+                                _thirdTextController.clear();
+                              });
                             }
-                            return null; //e-mail geçerli
+                            return null;
                           },
                         ),
+                        if (_showDiseaseInfoWarning)
+                          const Text(
+                            'Lütfen yanıtlayınız..',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
                         const SizedBox(
                             height: 35), //textboxlar arasındaki mesafe
                         const Text("En son ne zaman kan verdiniz?",
@@ -160,13 +181,25 @@ class _InformationState extends State<Information> {
                               ),
                               hintText: '  GG/AA/YY'),
                           validator: (value) {
-                            //input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              return 'Lütfen yanıtlayınız..'; //girilmediyse bu mesaj iletilir
+                              setState(() {
+                                _showBloodDonationWarning = true;
+                                _firstTextController.clear();
+                                _secondTextController.clear();
+                                _thirdTextController.clear();
+                              });
                             }
                             return null;
                           },
                         ),
+                        if (_showBloodDonationWarning)
+                          const Text(
+                            'Lütfen yanıtlayınız..',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
 
                         const SizedBox(
                             height: 35), //textboxlar arasındaki mesafe
@@ -211,13 +244,25 @@ class _InformationState extends State<Information> {
                             hintText: '  50 (kg)',
                           ),
                           validator: (value) {
-                            //input girilip girilmediğini kontrol eder
                             if (value == null || value.isEmpty) {
-                              return 'Lütfen yanıtlayınız..'; //girilmediyse bu mesaj iletilir
+                              setState(() {
+                                _showKiloWarning = true;
+                                _firstTextController.clear();
+                                _secondTextController.clear();
+                                _thirdTextController.clear();
+                              });
                             }
                             return null;
                           },
                         ),
+                        if (_showKiloWarning)
+                          const Text(
+                            'Lütfen yanıtlayınız..',
+                            style: TextStyle(
+                              color: Color(0xFFCC4646),
+                              fontSize: 12,
+                            ),
+                          ),
                       ],
                     ),
                     const SizedBox(height: 50),
@@ -265,7 +310,9 @@ class _InformationState extends State<Information> {
   }
 
   void _updateField() async {
-    if (_formKey.currentState!.validate()) {
+    if ((_firstTextController.text.isNotEmpty &&
+        _secondTextController.text.isNotEmpty &&
+        _thirdTextController.text.isNotEmpty)) {
       final userId = FirebaseAuth.instance.currentUser!.uid;
 
       await _firestore.updateDiseaseInfo(
@@ -285,6 +332,13 @@ class _InformationState extends State<Information> {
       );
       Navigator.pushNamedAndRemoveUntil(
           context, homePageRoute, (route) => false);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lütfen tüm kutucukları yanıtlayınız!'),
+          backgroundColor: Color(0xFF504658),
+        ),
+      );
     }
     setState(() {
       _firstTextController.clear();

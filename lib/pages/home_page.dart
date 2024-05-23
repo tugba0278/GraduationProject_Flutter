@@ -70,33 +70,15 @@ class _HomePageState extends State<HomePage> {
               },
             ),
           ),
-          title: Container(
-            padding: const EdgeInsets.only(
-                right: 20, left: 10, top: 13, bottom: 3), // Sağ ve sol padding
-            height: 60, // Arama çubuğunun yüksekliği
-            child: TextField(
-              textAlignVertical: TextAlignVertical.center,
-              focusNode: _searchFocus,
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Arama',
-                hintStyle: const TextStyle(
-                  fontSize: 20,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide:
-                      const BorderSide(color: Color(0xFFCC4646), width: 2),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide:
-                      const BorderSide(color: Color(0xFFCC4646), width: 2),
-                ),
-                prefixIcon: const Icon(Icons.search),
-              ),
-            ),
+          title: const Text(
+            "Hoşgeldiniz!",
+            style: TextStyle(
+                fontFamily: "Times New Roman",
+                letterSpacing: 6,
+                fontWeight: FontWeight.w700,
+                color: Color.fromARGB(255, 207, 176, 84)),
           ),
+          centerTitle: true,
         ),
         drawer: Drawer(
           shape: const RoundedRectangleBorder(
@@ -228,12 +210,12 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(
                   height: 80), // Video ile butonlar arasındaki boşluk
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      // İlk butona basıldığında yapılacak işlemler
+                      Navigator.pushNamed(context, '/blood-donation/');
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -244,10 +226,10 @@ class _HomePageState extends State<HomePage> {
                             width: 1.5,
                           ),
                         ),
-                        minimumSize: const Size(150, 50),
+                        minimumSize: const Size(250, 50),
                         elevation: 8),
                     child: const Text(
-                      'Randevu',
+                      'Kan Vermek İstiyorum',
                       style: TextStyle(
                           color: Color(0xFFCC4646),
                           fontFamily: "Times New Roman",
@@ -255,9 +237,10 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 15),
                     ),
                   ),
+                  const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      // İkinci butona basıldığında yapılacak işlemler
+                      Navigator.pushNamed(context, '/blood-need/');
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -268,11 +251,59 @@ class _HomePageState extends State<HomePage> {
                           width: 1.5,
                         ),
                       ),
-                      minimumSize: const Size(150, 50),
+                      minimumSize: const Size(250, 50),
                       elevation: 8,
                     ),
                     child: const Text(
-                      'Harita',
+                      'Kana İhtiyacım Var',
+                      style: TextStyle(
+                          color: Color(0xFFCC4646),
+                          fontFamily: "Times New Roman",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/donation-list/');
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        side: const BorderSide(
+                            color: Color(0xFFCC4646), width: 1.5),
+                      ),
+                      minimumSize: const Size(250, 50),
+                      elevation: 8,
+                    ),
+                    child: const Text(
+                      'Bağış Listesi',
+                      style: TextStyle(
+                          color: Color(0xFFCC4646),
+                          fontFamily: "Times New Roman",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/blood-advertisement/");
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        side: const BorderSide(
+                            color: Color(0xFFCC4646), width: 1.5),
+                      ),
+                      minimumSize: const Size(250, 50),
+                      elevation: 8,
+                    ),
+                    child: const Text(
+                      'Verdiğim İlanlar',
                       style: TextStyle(
                           color: Color(0xFFCC4646),
                           fontFamily: "Times New Roman",
@@ -282,89 +313,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-              const SizedBox(
-                  height: 50), // Video ile butonlar arasındaki boşluk
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      // İlk butona basıldığında yapılacak işlemler
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                            color: Color(0xFFCC4646), width: 1.5),
-                      ),
-                      minimumSize: const Size(150, 50),
-                      elevation: 8,
-                    ),
-                    child: const Text(
-                      'Ödülünüz',
-                      style: TextStyle(
-                          color: Color(0xFFCC4646),
-                          fontFamily: "Times New Roman",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, "/inform/");
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                            color: Color(0xFFCC4646), width: 1.5),
-                      ),
-                      minimumSize: const Size(150, 50),
-                      elevation: 8,
-                    ),
-                    child: const Text(
-                      'Bilgilendirme',
-                      style: TextStyle(
-                          color: Color(0xFFCC4646),
-                          fontFamily: "Times New Roman",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                  height: 50), // Video ile butonlar arasındaki boşluk
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/feedback/');
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        side: const BorderSide(
-                            color: Color(0xFFCC4646), width: 1.5),
-                      ),
-                      minimumSize: const Size(150, 50),
-                      elevation: 8,
-                    ),
-                    child: const Text(
-                      'Geri Bildirim Sistemi',
-                      style: TextStyle(
-                          color: Color(0xFFCC4646),
-                          fontFamily: "Times New Roman",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15),
-                    ),
-                  ),
-                ],
-              ),
+              // Video ile butonlar arasındaki boşluk
             ],
           ),
         ),
