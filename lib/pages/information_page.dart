@@ -1,8 +1,5 @@
-import 'package:bitirme_projesi/pages/home_page.dart';
 import 'package:bitirme_projesi/routes.dart';
-import 'package:bitirme_projesi/services/cloud_database/cloud_constants.dart';
 import 'package:bitirme_projesi/services/cloud_database/firebase_cloud_user_crud.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

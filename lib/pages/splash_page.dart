@@ -1,6 +1,5 @@
 import 'package:bitirme_projesi/firebase_options.dart';
 import 'package:bitirme_projesi/pages/home_page.dart';
-import 'package:bitirme_projesi/pages/inform_page.dart';
 import 'package:bitirme_projesi/pages/information_page.dart';
 import 'package:bitirme_projesi/services/cloud_database/cloud_constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
