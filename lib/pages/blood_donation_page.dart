@@ -40,6 +40,8 @@ class _BloodDonationPageState extends State<BloodDonationPage> {
   void addCityToFirestore(String city) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
+    DateTime now = DateTime.now();
+    String confirmDate = "${now.day}-${now.month}-${now.year}";
 
     final DocumentReference docRef =
         firestore.collection('kan-verme').doc(user!.uid);
@@ -49,6 +51,7 @@ class _BloodDonationPageState extends State<BloodDonationPage> {
       "blood-type": _bloodType,
       "phone-number": _phoneNumber,
       'living-city': city,
+      'confirm-date': confirmDate,
     });
   }
 

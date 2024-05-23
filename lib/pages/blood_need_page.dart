@@ -52,6 +52,8 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
   void addCityToFirestore(String city, String _bloodType) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
+    DateTime now = DateTime.now();
+    String confirmDate = "${now.day}-${now.month}-${now.year}";
 
     if (user != null) {
       // Kullanıcının kimlik bilgisine dayalı olarak yeni bir belge ekleyin
@@ -64,6 +66,7 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
         "blood-type": _bloodType,
         "phone-number": _phoneNumber,
         'living-city': city,
+        'confirm-date': confirmDate,
       });
     } else {
       print("Kullanıcı oturumu açık değil.");
