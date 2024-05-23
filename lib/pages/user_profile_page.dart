@@ -101,14 +101,14 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     _buildListTileWithUpdateButton(
                       title: 'Yaşadığınız Şehir',
                       fieldName:
-                          'adress', // Kullanıcının adres bilgisi buraya gelecek
+                          'living-city', // Kullanıcının adres bilgisi buraya gelecek
                       onTap: () {
                         _showUpdateDialog(
                           context,
                           'Yaşadığınız Şehir',
                           'Yeni Adresi Girin',
                           _addressController,
-                          'adress',
+                          'living-city',
                         );
                       },
                     ),

@@ -1,141 +1,124 @@
+import 'package:bitirme_projesi/pages/home_page.dart';
+import 'package:bitirme_projesi/pages/oval_clipper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
 
-class Page extends StatefulWidget {
-  const Page({super.key});
+class DonationListPage extends StatefulWidget {
+  const DonationListPage({super.key});
 
   @override
-  _PageState createState() => _PageState();
+  _DonationListPageState createState() => _DonationListPageState();
 }
 
-class _PageState extends State<Page> {
-  CalendarFormat _calendarFormat = CalendarFormat.month;
-  DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
+class _DonationListPageState extends State<DonationListPage> {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+
+  Future<List<DocumentSnapshot>> getUserDocs(String userId) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    try {
+      // Kullanıcının belgesini referans al
+      DocumentReference userDocRef =
+          firestore.collection('kan-ihtiyacı').doc(userId);
+
+      // Kullanıcının belgesi var mı kontrol et
+      DocumentSnapshot userDocSnapshot = await userDocRef.get();
+      if (userDocSnapshot.exists) {
+        // user-docs koleksiyonunu referans al
+        CollectionReference userDocsCollectionRef =
+            userDocRef.collection('user-docs');
+
+        // Kullanıcının belgesi altındaki belgeleri al
+        QuerySnapshot userDocsQuerySnapshot = await userDocsCollectionRef.get();
+
+        // Belgeleri döndür
+        return userDocsQuerySnapshot.docs;
+      } else {
+        print('Kullanıcının belgesi bulunamadı.');
+        return [];
+      }
+    } catch (e) {
+      print('Belgeler alınırken bir hata oluştu: $e');
+      return [];
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFEEE2DE),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFB7B7B7),
-        leading: IconButton(
-          icon:
-              const Icon(Icons.arrow_back, size: 35), // Geri düğmesini büyütme
-          onPressed: () {
-            Navigator.pop(context); // Geri düğmesine basıldığında geri dön
-          },
-        ),
-        title: const Padding(
-          padding: EdgeInsets.only(left: 80),
-          child: Text(
-            'Randevu',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Color(0xFF504658),
-                fontFamily: "Times New Roman",
-                fontWeight: FontWeight.w900),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFEEE2DE),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFFEEE2DE),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back,
+                size: 35), // Geri düğmesini büyütme
+            onPressed: () {
+              Navigator.pop(context); // Geri düğmesine basıldığında geri dön
+            },
           ),
-        ),
-      ),
-      body: GestureDetector(
-        onTap: () {
-          setState(() {
-            _selectedDay =
-                null; // Boş bir yere tıklandığında seçilen tarihi sil
-          });
-        },
-        child: Container(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: TableCalendar(
-                  calendarStyle: CalendarStyle(
-                    cellMargin: EdgeInsets.all(8.0),
-                    defaultTextStyle: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  firstDay: DateTime.utc(2020, 1, 1),
-                  lastDay: DateTime.utc(2030, 12, 31),
-                  focusedDay: _focusedDay,
-                  calendarFormat: _calendarFormat,
-                  selectedDayPredicate: (day) {
-                    return isSameDay(_selectedDay, day);
-                  },
-                  onDaySelected: (selectedDay, focusedDay) {
-                    setState(() {
-                      _selectedDay = selectedDay;
-                      _focusedDay = focusedDay;
-                    });
-                  },
-                  onFormatChanged: (format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
-                  },
-                  onPageChanged: (focusedDay) {
-                    _focusedDay = focusedDay;
-                  },
-                  // Yeni eklendi: Tarih bugünden önceyse seçilmemesini sağla
-                  enabledDayPredicate: (day) {
-                    return !day
-                        .isBefore(DateTime.now().subtract(Duration(days: 1)));
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.topRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 30, bottom: 120),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      if (_selectedDay != null) {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Randevu Tarihi'),
-                              content: Text(
-                                'Seçilen tarih: ${_selectedDay!.day}/${_selectedDay!.month}/${_selectedDay!.year}',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    _saveAppointmentToDatabase(_selectedDay!);
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('Kaydet'),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text('İptal'),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(
-                          content: Text('Lütfen bir tarih seçin.'),
-                          backgroundColor: Color(0xFF504658),
-                        ));
-                      }
-                    },
-                    child: const Icon(Icons.add),
-                  ),
-                ),
-              ),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Bağışta Bulunanlar'),
+              Tab(text: 'Kan İhtiyacı Olanlar'),
             ],
           ),
         ),
+        body: TabBarView(
+          children: [
+            // İlk sekme içeriği
+            Container(),
+            // İkinci sekme içeriği
+            FutureBuilder(
+              future: getUserDocs(userId), // Kullanıcı belgelerini al
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Hata: ${snapshot.error}'));
+                } else if (!snapshot.hasData) {
+                  return Center(child: Text('Veri bulunamadı'));
+                } else {
+                  // Kullanıcının belgeleri varsa
+                  List<DocumentSnapshot<Object?>>? docs = snapshot.data;
+                  return ListView.builder(
+                    itemCount: docs?.length,
+                    itemBuilder: (context, index) {
+                      // Her bir belge için bir Card oluştur
+                      return Card(
+                        child: ListTile(
+                          title:
+                              Text('Donör İsmi: ${docs?[index]['donor-name']}'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Kan Grubu: ${docs?[index]['blood-type']}'),
+                              Text(
+                                  'Telefon Numarası: ${docs?[index]['phone-number']}'),
+                              Text(
+                                  'Yaşadığı Şehir: ${docs?[index]['living-city']}'),
+                              Text(
+                                  'Yayınlanma Tarihi: ${docs?[index]['confirm-date']}'),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ],
+        ),
       ),
     );
-  }
-
-  void _saveAppointmentToDatabase(DateTime appointmentDate) {
-    print('Randevu Tarihi: $appointmentDate');
   }
 }

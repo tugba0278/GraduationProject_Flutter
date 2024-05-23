@@ -226,26 +226,6 @@ class _BloodDonationPageState extends State<BloodDonationPage> {
                                         : null,
                                   );
                                 }).toList(),
-                                // Şehir seçilmediğinde "Seç" yazısını görüntüle
-                                if (selectedCity.isEmpty)
-                                  ListTile(
-                                    titleAlignment:
-                                        ListTileTitleAlignment.center,
-                                    title: const Text(
-                                      'Seç',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        selectedCity =
-                                            ''; // Seçeneği seçildiğinde selectedCity'yi boşalt
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  ),
                               ],
                             ),
                           );

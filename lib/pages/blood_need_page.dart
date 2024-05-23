@@ -56,12 +56,11 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
     String confirmDate = "${now.day}-${now.month}-${now.year}";
 
     if (user != null) {
-      // Kullanıcının kimlik bilgisine dayalı olarak yeni bir belge ekleyin
-      await firestore
-          .collection('kan-ihtiyacı')
-          .doc(user.uid)
-          .collection('user-docs')
-          .add({
+      // Belgeyi ekleyin ve belge kimliğini kullanıcı UID'si ile güncelleyin
+      DocumentReference docRef =
+          await firestore.collection('kan-ihtiyacı').add({
+        // Belge içine gerekli bilgileri ekleyin
+        "user-id": user.uid,
         "donor-name": _userName,
         "blood-type": _bloodType,
         "phone-number": _phoneNumber,
@@ -285,26 +284,6 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
                                         : null,
                                   );
                                 }).toList(),
-                                // Şehir seçilmediğinde "Seç" yazısını görüntüle
-                                if (selectedCity.isEmpty)
-                                  ListTile(
-                                    titleAlignment:
-                                        ListTileTitleAlignment.center,
-                                    title: const Text(
-                                      'Seç',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue,
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        selectedCity =
-                                            ''; // Seçeneği seçildiğinde selectedCity'yi boşalt
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  ),
                               ],
                             ),
                           );
