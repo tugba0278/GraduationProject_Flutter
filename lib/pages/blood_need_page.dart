@@ -14,6 +14,7 @@ class BloodNeedPage extends StatefulWidget {
 class _BloodNeedPageState extends State<BloodNeedPage> {
   late TextEditingController cityController = TextEditingController();
   String selectedCity = "";
+  String selectedBloodType = "";
   String _userName = "";
   String _phoneNumber = "";
   String _bloodType = "";
@@ -37,19 +38,36 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
     "Mardin",
   ]..sort();
 
-  void addCityToFirestore(String city) async {
+  late List<String> bloodTypes = [
+    'A Rh+',
+    'A Rh-',
+    'B Rh+',
+    'B Rh-',
+    'AB Rh+',
+    'AB Rh-',
+    '0 Rh+',
+    '0 Rh-',
+  ];
+
+  void addCityToFirestore(String city, String _bloodType) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
 
-    final DocumentReference docRef =
-        firestore.collection('kan-verme').doc(user!.uid);
-
-    await docRef.set({
-      "donor-name": _userName,
-      "blood-type": _bloodType,
-      "phone-number": _phoneNumber,
-      'living-city': city,
-    });
+    if (user != null) {
+      // Kullanıcının kimlik bilgisine dayalı olarak yeni bir belge ekleyin
+      await firestore
+          .collection('kan-ihtiyacı')
+          .doc(user.uid)
+          .collection('user-docs')
+          .add({
+        "donor-name": _userName,
+        "blood-type": _bloodType,
+        "phone-number": _phoneNumber,
+        'living-city': city,
+      });
+    } else {
+      print("Kullanıcı oturumu açık değil.");
+    }
   }
 
   // Kullanıcı adını Firestore'dan yükle
@@ -63,28 +81,12 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
         setState(() {
           _userName = userData['name'];
           _phoneNumber = userData['phoneNumber'];
-          _bloodType = userData['blood'];
         });
       } else {
         print('Kullanıcı verisi bulunamadı.');
       }
     } else {
       print('Kullanıcı girişi yapılmamış.');
-    }
-  }
-
-  void updateLivingCity() async {
-    if (selectedCity.isNotEmpty) {
-      final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-      final userId = FirebaseAuth.instance.currentUser!.uid;
-
-      // Kullanıcının verilerini güncelle
-      await _firestore.collection('users').doc(userId).update({
-        'living-city': selectedCity,
-      });
-      print("şehir seçildi!!!!!!!!!!!!");
-    } else {
-      print("selectedcity is empty!!!!!!!");
     }
   }
 
@@ -130,7 +132,7 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20.0),
                 child: Image.asset(
-                  'lib/assets/donor.png', // Resminizin yolunu belirtin
+                  'lib/assets/help.png', // Resminizin yolunu belirtin
                   width: MediaQuery.of(context).size.width *
                       0.4, // Ekran genişliğinin %80'i kadar
                   fit: BoxFit.contain,
@@ -146,7 +148,7 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
                 clipper: OvalClipper(),
                 child: Container(
                   width: 250, // Çerçevenin genişliği
-                  height: 130, // Çerçevenin yüksekliği
+                  height: 100, // Çerçevenin yüksekliği
                   decoration: BoxDecoration(
                     color:
                         const Color(0xFF4A403A), // Çerçevenin arka plan rengi
@@ -161,7 +163,7 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
                   ),
                   child: const Center(
                     child: Text(
-                      'Ad soyad, kan grubunuz ve telefon numaranız paylaşılacaktır!',
+                      'Ad soyad ve telefon numaranız paylaşılacaktır!',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 18,
@@ -174,8 +176,65 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
               ),
             ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
+              padding: const EdgeInsets.fromLTRB(10, 40, 10, 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Kan Grubu :   ',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    selectedBloodType.isEmpty ? 'Seç' : selectedBloodType,
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  IconButton(
+                    iconSize: 30,
+                    icon: const Icon(Icons.arrow_drop_down),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            alignment: Alignment.center,
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            padding: const EdgeInsets.all(10.0),
+                            height: MediaQuery.of(context).size.height * 0.6,
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: [
+                                // Kan listesini oluştur
+                                ...bloodTypes.map((String bloodType) {
+                                  return ListTile(
+                                    titleAlignment:
+                                        ListTileTitleAlignment.center,
+                                    title: Text(bloodType),
+                                    onTap: () {
+                                      setState(() {
+                                        selectedBloodType = bloodType;
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    // Seçili kan varsayılan olarak "Seç" ise görsel olarak belirt
+                                    selected: selectedBloodType == bloodType,
+                                    tileColor: selectedBloodType == bloodType
+                                        ? Colors.blueGrey.withOpacity(0.2)
+                                        : null,
+                                  );
+                                }).toList(),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 0, 0, 15),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -257,16 +316,16 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
               child: ElevatedButton(
                 onPressed: () {
-                  if (selectedCity.isNotEmpty) {
-                    addCityToFirestore(selectedCity);
+                  if (selectedBloodType.isNotEmpty && selectedCity.isNotEmpty) {
+                    addCityToFirestore(selectedCity, selectedBloodType);
                     print("gönderildi!!!!!!!!!!!!!!");
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title:
-                              const Text("Bağışınızla Bir Hayat Kurtardınız!"),
-                          content: const Text("Teşekkürlerimizi sunarız."),
+                          title: const Text("Geçmiş Olsun!"),
+                          content: const Text(
+                              "İhtiyacınız olan kan grubu talebiniz alındı."),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
@@ -281,14 +340,14 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
                         );
                       },
                     );
-                    updateLivingCity();
                   } else {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text("Şehir Seçmek Zorunludur"),
-                          content: Text("Lütfen bir şehir seçiniz."),
+                          title: Text("Kan Grubu ve Şehir Seçmek Zorunludur"),
+                          content: Text(
+                              "Lütfen kan grubunuzu ve bir şehir seçiniz."),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
