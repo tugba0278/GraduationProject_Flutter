@@ -332,9 +332,10 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
                                 Navigator.of(context).pop();
                                 Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
-                                        builder: (context) => HomePage()));
+                                        builder: (context) =>
+                                            const HomePage()));
                               },
-                              child: Text("Tamam"),
+                              child: const Text("Tamam"),
                             ),
                           ],
                         );
@@ -345,15 +346,16 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text("Kan Grubu ve Şehir Seçmek Zorunludur"),
-                          content: Text(
+                          title: const Text(
+                              "Kan Grubu ve Şehir Seçmek Zorunludur"),
+                          content: const Text(
                               "Lütfen kan grubunuzu ve bir şehir seçiniz."),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text("Tamam"),
+                              child: const Text("Tamam"),
                             ),
                           ],
                         );
