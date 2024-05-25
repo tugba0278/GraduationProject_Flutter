@@ -4,6 +4,7 @@ import 'package:bitirme_projesi/utilities/dialogs/logout_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -81,6 +82,7 @@ class _HomePageState extends State<HomePage> {
           centerTitle: true,
         ),
         drawer: Drawer(
+          width: MediaQuery.of(context).size.width * 0.7,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.zero)),
           backgroundColor: const Color(0xFFFAF5EF),
@@ -235,6 +237,7 @@ class _HomePageState extends State<HomePage> {
                           fontFamily: "Times New Roman",
                           fontWeight: FontWeight.bold,
                           fontSize: 15),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   const SizedBox(height: 30),

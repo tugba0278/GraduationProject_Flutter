@@ -97,8 +97,8 @@ class _BloodAdvertisementPageState extends State<BloodAdvertisementPage> {
           ),
           bottom: const TabBar(
             tabs: [
-              Tab(text: 'İlan Verdiklerim'),
-              Tab(text: 'Kan İhtiyacı Karşılanlar'),
+              Tab(text: 'Kan Bekleyenler'),
+              Tab(text: 'Kan İhtiyacı Karşılananlar'),
             ],
           ),
         ),

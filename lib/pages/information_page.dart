@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class InformationPage extends StatefulWidget {
-  const InformationPage({super.key});
+  const InformationPage({Key? key}) : super(key: key);
 
   @override
   State<InformationPage> createState() => _InformationPageState();
@@ -13,8 +13,6 @@ class InformationPage extends StatefulWidget {
 
 class _InformationPageState extends State<InformationPage> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _firstTextController = TextEditingController();
-  late DateTime _secondText = DateTime.now();
   final TextEditingController _secondTextController = TextEditingController();
   final TextEditingController _thirdTextController = TextEditingController();
 
@@ -23,12 +21,12 @@ class _InformationPageState extends State<InformationPage> {
   @override
   void initState() {
     super.initState();
-    _secondTextController.text = DateFormat("dd-MM-yyyy").format(_secondText);
+    _secondTextController.text =
+        DateFormat("dd-MM-yyyy").format(DateTime.now());
   }
 
   @override
   void dispose() {
-    _firstTextController.dispose();
     _secondTextController.dispose();
     _thirdTextController.dispose();
     super.dispose();
@@ -38,9 +36,12 @@ class _InformationPageState extends State<InformationPage> {
   bool _showBloodDonationWarning = false;
   bool _showKiloWarning = false;
 
+  String? _selectedDiseaseInfo;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: GestureDetector(
         onTap: () {
           // Boş bir alana tıklandığında uyarıları kaldır
@@ -53,16 +54,17 @@ class _InformationPageState extends State<InformationPage> {
         },
         child: Container(
           decoration: const BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("lib/assets/background_image.png"),
-                  alignment: Alignment.center,
-                  fit: BoxFit.contain)),
+            image: DecorationImage(
+              image: AssetImage("lib/assets/bg5.jpg"),
+              alignment: Alignment.center,
+              fit: BoxFit.contain,
+            ),
+          ),
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 35),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                  50, 180, 20, 50), //her taraftan bırakılan mesafe ,)
+              padding: const EdgeInsets.fromLTRB(40, 180, 40, 60),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -70,54 +72,53 @@ class _InformationPageState extends State<InformationPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Daha önce hastalık geçirdiniz mi?",
-                            style: TextStyle(
-                              fontSize: 25,
-                              fontFamily: 'Times New Roman',
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.left),
-                        const SizedBox(
-                            height: 7), //text ve textformfield arası mesafe
-                        TextFormField(
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontFamily: 'Times New Roman', //input yazı rengi
+                        const Text(
+                          "Daha önce hastalık geçirdiniz mi?",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontFamily: 'Times New Roman',
+                            fontWeight: FontWeight.bold,
                           ),
-                          controller: _firstTextController,
-                          keyboardType: TextInputType.text, //inputun tipi
+                          textAlign: TextAlign.left,
+                        ),
+                        const SizedBox(height: 7),
+                        DropdownButtonFormField<String>(
+                          value: _selectedDiseaseInfo,
+                          items: ["Evet", "Hayır"].map((String? value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value ?? ""),
+                            );
+                          }).toList(),
+                          onChanged: (String? value) {
+                            setState(() {
+                              _selectedDiseaseInfo = value;
+                            });
+                          },
                           decoration: const InputDecoration(
-                              //input kutucuğu özelleştirme
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 50.0), //kenarlık rengi ve kalınlığı
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    10)), // input kutucuğunun köşeli olmasını sağlar
-                              ),
-                              //kutucuğa tıklandığındaki görünüm
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFFCC4646)),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                              filled: true, //kutucuk doldurulması için onay
-                              fillColor: Color.fromRGBO(255, 255, 255,
-                                  0.7), // input kutucuğunun arka plan rengi
-                              contentPadding: EdgeInsets.symmetric(
-                                //input kutucuğunun yüksekliği
-                                vertical: 5.0,
-                                horizontal: 10,
-                              ),
-                              hintText: '  Evet/Hayır'),
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 50.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFCC4646)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromRGBO(255, 255, 255, 0.7),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.0,
+                              horizontal: 10,
+                            ),
+                          ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               setState(() {
                                 _showDiseaseInfoWarning = true;
-                                _firstTextController.clear();
-                                _secondTextController.clear();
-                                _thirdTextController.clear();
+                                _selectedDiseaseInfo = null;
                               });
                             }
                             return null;
@@ -125,23 +126,23 @@ class _InformationPageState extends State<InformationPage> {
                         ),
                         if (_showDiseaseInfoWarning)
                           const Text(
-                            'Lütfen yanıtlayınız..',
+                            'Lütfen seçiniz..',
                             style: TextStyle(
                               color: Color(0xFFCC4646),
                               fontSize: 12,
                             ),
                           ),
-                        const SizedBox(
-                            height: 35), //textboxlar arasındaki mesafe
-                        const Text("En son ne zaman kan verdiniz?",
-                            style: TextStyle(
-                              fontSize: 25, //yazı boyutu
-                              fontFamily: 'Times New Roman',
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.left),
-                        const SizedBox(
-                            height: 5), //text ve textformfield arası mesafe
+                        const SizedBox(height: 35),
+                        const Text(
+                          "En son ne zaman kan verdiniz?",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontFamily: 'Times New Roman',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        const SizedBox(height: 5),
                         TextFormField(
                           style: const TextStyle(
                             fontSize: 18,
@@ -153,37 +154,29 @@ class _InformationPageState extends State<InformationPage> {
                           },
                           controller: _secondTextController,
                           decoration: const InputDecoration(
-                              //input kutucuğu özelleştirme
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Colors.black,
-                                    width: 50.0), //kenarlık rengi ve kalınlığı
-                                borderRadius: BorderRadius.all(Radius.circular(
-                                    10)), //input kutucuğunun köşeli olması sağlanır
-                              ),
-                              //kutucuğa tıklandığındaki görünüm
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFFCC4646)),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(10)),
-                              ),
-                              filled: true,
-                              fillColor: Color.fromRGBO(255, 255, 255,
-                                  0.7), //input kutucuğunun arka plan rengi
-                              contentPadding: EdgeInsets.symmetric(
-                                //input kutucuğunun yüksekliği
-                                vertical: 5.0,
-                                horizontal: 10,
-                              ),
-                              hintText: '  GG/AA/YY'),
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 50.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFCC4646)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
+                            filled: true,
+                            fillColor: Color.fromRGBO(255, 255, 255, 0.7),
+                            contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.0,
+                              horizontal: 10,
+                            ),
+                            hintText: '  GG/AA/YY',
+                          ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               setState(() {
                                 _showBloodDonationWarning = true;
-                                _firstTextController.clear();
-                                _secondTextController.clear();
-                                _thirdTextController.clear();
                               });
                             }
                             return null;
@@ -197,18 +190,17 @@ class _InformationPageState extends State<InformationPage> {
                               fontSize: 12,
                             ),
                           ),
-
-                        const SizedBox(
-                            height: 35), //textboxlar arasındaki mesafe
-                        const Text("Kilonuzu giriniz",
-                            style: TextStyle(
-                              fontSize: 25, //yazı boyutu
-                              fontFamily: 'Times New Roman',
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.left),
-                        const SizedBox(
-                            height: 5), //text ve textformfield arası mesafe
+                        const SizedBox(height: 35),
+                        const Text(
+                          "Kilonuzu giriniz",
+                          style: TextStyle(
+                            fontSize: 25,
+                            fontFamily: 'Times New Roman',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                        const SizedBox(height: 5),
                         TextFormField(
                           style: const TextStyle(
                             fontSize: 18,
@@ -216,25 +208,20 @@ class _InformationPageState extends State<InformationPage> {
                           ),
                           controller: _thirdTextController,
                           decoration: const InputDecoration(
-                            //input kutucuğu özelleştirme
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.black,
-                                  width: 50.0), //kenarlık rengi ve kalınlığı
-                              borderRadius: BorderRadius.all(Radius.circular(
-                                  10)), //input kutucuğunun köşeli olması sağlanır
+                              borderSide:
+                                  BorderSide(color: Colors.black, width: 50.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
-                            //kutucuğa tıklandığındaki görünüm
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFFCC4646)),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(10)),
                             ),
                             filled: true,
-                            fillColor: Colors
-                                .white, //input kutucuğunun arka plan rengi
+                            fillColor: Colors.white,
                             contentPadding: EdgeInsets.symmetric(
-                              //input kutucuğunun yüksekliği
                               vertical: 5.0,
                               horizontal: 10,
                             ),
@@ -244,9 +231,6 @@ class _InformationPageState extends State<InformationPage> {
                             if (value == null || value.isEmpty) {
                               setState(() {
                                 _showKiloWarning = true;
-                                _firstTextController.clear();
-                                _secondTextController.clear();
-                                _thirdTextController.clear();
                               });
                             }
                             return null;
@@ -264,34 +248,26 @@ class _InformationPageState extends State<InformationPage> {
                     ),
                     const SizedBox(height: 50),
                     Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.end, // yatayda merkeze hizalama
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         ElevatedButton(
-                          //ileri butonu
                           onPressed: _updateField,
                           style: ElevatedButton.styleFrom(
-                            //butonu özelleştirme
-                            backgroundColor: const Color(
-                                0xFFCC4646), //ileri butonunun arka plan rengi
+                            backgroundColor: const Color(0xFFCC4646),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  10.0), //ileri butonunun köşe ovalliği
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
-                            minimumSize:
-                                const Size(120, 45), // Sabit boyut tanımı
+                            minimumSize: const Size(120, 45),
                           ),
                           child: const Text(
                             'İleri',
                             style: TextStyle(
-                                //text için özelleştirme
-                                fontSize: 20, //yazı boyutu
-                                fontFamily: 'Arial', //yazı tipi
-                                fontWeight:
-                                    FontWeight.bold, //yazı kalınlaştırma
-                                fontStyle: FontStyle.italic, //yazı italik yapma
-                                color: Colors.white //yazı rengi
-                                ),
+                              fontSize: 20,
+                              fontFamily: 'Arial',
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],
@@ -307,56 +283,41 @@ class _InformationPageState extends State<InformationPage> {
   }
 
   void _updateField() async {
-    if ((_firstTextController.text.isNotEmpty &&
-        _secondTextController.text.isNotEmpty &&
-        _thirdTextController.text.isNotEmpty)) {
+    if (_formKey.currentState!.validate()) {
       final userId = FirebaseAuth.instance.currentUser!.uid;
 
       await _firestore.updateDiseaseInfo(
-          documentId: userId, diseaseInfo: _firstTextController.text);
+          documentId: userId, diseaseInfo: _selectedDiseaseInfo!);
 
       await _firestore.updateLastBloodDonationDate(
           documentId: userId, lastBloodDonation: _secondTextController.text);
 
       await _firestore.updateKilo(
           documentId: userId, kilo: _thirdTextController.text);
-      // Veritabanına ekleme işlemi tamamlandığında kullanıcıya bildirim göster
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Veriler başarıyla kaydedildi.'),
           backgroundColor: Color(0xFF504658),
         ),
       );
+
       Navigator.pushNamedAndRemoveUntil(
           context, homePageRoute, (route) => false);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lütfen tüm kutucukları yanıtlayınız!'),
-          backgroundColor: Color(0xFF504658),
-        ),
-      );
     }
-    setState(() {
-      _firstTextController.clear();
-      _secondTextController.clear();
-      _thirdTextController.clear();
-    });
   }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _secondText,
+      initialDate: DateTime.now(),
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
 
-    if (picked != null && picked != _secondText) {
+    if (picked != null) {
       setState(() {
-        _secondText = picked;
-        _secondTextController.text =
-            DateFormat("dd-MM-yyyy").format(_secondText);
+        _secondTextController.text = DateFormat("dd-MM-yyyy").format(picked);
       });
     }
   }

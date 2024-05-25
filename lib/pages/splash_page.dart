@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen>
       backgroundColor: const Color(0xFFFAF5EF),
       body: Container(
         //alignment: Alignment.center,
-        padding: const EdgeInsets.only(top: 80),
+        padding: const EdgeInsets.only(top: 80, right: 10, left: 10),
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
           children: [

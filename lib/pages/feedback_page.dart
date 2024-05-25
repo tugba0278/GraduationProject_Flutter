@@ -31,7 +31,7 @@ class _FeedbackState extends State<FeedbackPage> {
           },
         ),
         title: const Padding(
-          padding: EdgeInsets.only(left: 60),
+          padding: EdgeInsets.symmetric(horizontal: 50),
           child: Text(
             'Geri Bildirim',
             textAlign: TextAlign.center,

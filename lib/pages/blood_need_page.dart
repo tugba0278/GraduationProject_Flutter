@@ -117,12 +117,12 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Padding(
-              padding: EdgeInsets.only(top: 20.0, left: 10),
+              padding: EdgeInsets.only(top: 20.0, left: 10, right: 10),
               child: Text(
                 'Kan Bağışı Hayat Kurtarır',
                 style: TextStyle(
                   fontFamily: "Times New Roman",
-                  letterSpacing: 6,
+                  letterSpacing: 5,
                   fontWeight: FontWeight.w700,
                   color: Color.fromARGB(255, 207, 176, 84),
                   fontSize: 18,

@@ -25,7 +25,7 @@ class _InformPageState extends State<InformPage> {
           },
         ),
         title: const Padding(
-          padding: EdgeInsets.only(left: 60),
+          padding: EdgeInsets.symmetric(horizontal: 50),
           child: Text(
             'Bilgilendirme',
             textAlign: TextAlign.center,

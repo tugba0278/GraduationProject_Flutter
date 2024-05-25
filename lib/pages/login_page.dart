@@ -54,11 +54,11 @@ class _LoginUserPageState extends State<LoginUserPage> {
           });
         },
         child: Container(
-          margin: const EdgeInsets.only(top: 80),
+          margin: const EdgeInsets.only(top: 90),
           decoration: const BoxDecoration(
               image: DecorationImage(
             image: AssetImage(
-              "lib/assets/background_image.png",
+              "lib/assets/bg5.jpg",
             ),
             alignment: Alignment.center,
             fit: BoxFit.contain,
@@ -67,7 +67,7 @@ class _LoginUserPageState extends State<LoginUserPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
-                  50, 200, 50, 20), //her taraftan bırakılan mesafe ,)
+                  40, 180, 40, 20), //her taraftan bırakılan mesafe ,)
               child: Form(
                 key: _formKey,
                 child: Column(

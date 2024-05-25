@@ -51,7 +51,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           },
         ),
         title: const Padding(
-          padding: EdgeInsets.only(left: 50),
+          padding: EdgeInsets.symmetric(horizontal: 40),
           child: Text(
             'Kullanıcı Profili',
             textAlign: TextAlign.center,
@@ -68,7 +68,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 20, top: 35),
+              padding: const EdgeInsets.only(left: 20, top: 35, right: 20),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.zero),
                 child: Image.asset(
@@ -106,7 +106,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         _showUpdateDialog(
                           context,
                           'Yaşadığınız Şehir',
-                          'Yeni Adresi Girin',
+                          'Yeni Şehri Girin',
                           _addressController,
                           'living-city',
                         );

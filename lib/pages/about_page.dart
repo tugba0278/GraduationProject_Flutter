@@ -25,7 +25,7 @@ class _AboutPageState extends State<AboutPage> {
           },
         ),
         title: const Padding(
-          padding: EdgeInsets.only(left: 70),
+          padding: EdgeInsets.symmetric(horizontal: 60),
           child: Text(
             'Hakkımızda',
             textAlign: TextAlign.center,
@@ -54,7 +54,7 @@ class _AboutPageState extends State<AboutPage> {
               ),
             ),
             const Padding(
-              padding: EdgeInsets.only(top: 50.0, left: 17),
+              padding: EdgeInsets.only(top: 50.0, left: 17, right: 17),
               child: Text(
                 'Neyi Amaçlıyoruz?',
                 style: TextStyle(
@@ -67,7 +67,7 @@ class _AboutPageState extends State<AboutPage> {
             const Padding(
               padding: EdgeInsets.only(top: 50.0, left: 30, right: 30),
               child: Text(
-                'Kan Bağışı Uygulaması, kan bağışının önemini vurgulayarak daha fazla insanı bu değerli eyleme teşvik etmeyi amaçlar. Kullanıcılar, kan bağışı yapabilecekleri yerleri bulabilir, bağış tarihlerini takip edebilir ve toplumlarını güçlendirebilirler. Sağlık kuruluşları, kan stoklarını yönetme ve ihtiyaç duydukları kanı hızlı ve verimli bir şekilde temin etme konusunda desteklenir.',
+                'Kan Bağışı Uygulaması, kan bağışının önemini vurgulayarak daha fazla insanı bu değerli eyleme teşvik etmeyi amaçlar. Kullanıcılar, kan bağışı yapabilecekleri yerleri bulabilir, bağış tarihlerini takip edebilir ve toplumlarını güçlendirebilirler. Kolaylıkla kan vermek isteyen ve kan ihtiyacı bulunan kişilere ulaşabilmek mümkündür.',
                 style: TextStyle(
                   color: Color(0xFF4A403A),
                   fontSize: 17,
@@ -77,7 +77,7 @@ class _AboutPageState extends State<AboutPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 25, top: 35),
+              padding: const EdgeInsets.only(left: 25, top: 35, right: 25),
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.zero),
                 child: Image.asset(
