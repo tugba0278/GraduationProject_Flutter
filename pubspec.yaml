@@ -46,6 +46,9 @@ dependencies:
   chewie: ^1.8.1
   appinio_video_player: ^1.2.2
   table_calendar: ^3.0.8
+  firebase: ^9.0.3
+  messaging: ^0.2.1
+  firebase_messaging: ^14.9.3
   
 
 dev_dependencies:

@@ -44,59 +44,59 @@ class _AppointmentEntryPageState extends State<AppointmentEntryPage> {
               ),
             ),
             // First tab view
-            FutureBuilder(
-              future: returnUserName(),
-              builder: (context, AsyncSnapshot<String> userSnapshot) {
-                if (userSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (userSnapshot.hasError) {
-                  return Center(child: Text('Error: ${userSnapshot.error}'));
-                } else {
-                  return FutureBuilder(
-                    future: FirebaseFirestore.instance
-                        .collection('appoinments')
-                        .doc(userSnapshot.data as String)
-                        .get(),
-                    builder: (context,
-                        AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
-                            snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else {
-                        if (snapshot.data!.exists) {
-                          List<dynamic> appointmentDates =
-                              snapshot.data!['appoinmentdates'];
-                          return ListView.builder(
-                            itemCount: appointmentDates.length,
-                            itemBuilder: (context, index) {
-                              return Card(
-                                child: ListTile(
-                                  title: Text(appointmentDates[index]),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AppointmentEntryPage()),
-                                    );
-                                  },
-                                ),
-                              );
-                            },
-                          );
-                        } else {
-                          return const Center(
-                            child: Text('No appointments found'),
-                          );
-                        }
-                      }
-                    },
-                  );
-                }
-              },
-            ),
+            // FutureBuilder(
+            //   future: returnUserName(),
+            //   builder: (context, AsyncSnapshot<String> userSnapshot) {
+            //     if (userSnapshot.connectionState == ConnectionState.waiting) {
+            //       return Center(child: CircularProgressIndicator());
+            //     } else if (userSnapshot.hasError) {
+            //       return Center(child: Text('Error: ${userSnapshot.error}'));
+            //     } else {
+            //       return FutureBuilder(
+            //         future: FirebaseFirestore.instance
+            //             .collection('appoinments')
+            //             .doc(userSnapshot.data as String)
+            //             .get(),
+            //         builder: (context,
+            //             AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+            //                 snapshot) {
+            //           if (snapshot.connectionState == ConnectionState.waiting) {
+            //             return Center(child: CircularProgressIndicator());
+            //           } else if (snapshot.hasError) {
+            //             return Center(child: Text('Error: ${snapshot.error}'));
+            //           } else {
+            //             if (snapshot.data!.exists) {
+            //               List<dynamic> appointmentDates =
+            //                   snapshot.data!['appoinmentdates'];
+            //               return ListView.builder(
+            //                 itemCount: appointmentDates.length,
+            //                 itemBuilder: (context, index) {
+            //                   return Card(
+            //                     child: ListTile(
+            //                       title: Text(appointmentDates[index]),
+            //                       onTap: () {
+            //                         Navigator.push(
+            //                           context,
+            //                           MaterialPageRoute(
+            //                               builder: (context) =>
+            //                                   AppointmentEntryPage()),
+            //                         );
+            //                       },
+            //                     ),
+            //                   );
+            //                 },
+            //               );
+            //             } else {
+            //               return const Center(
+            //                 child: Text('No appointments found'),
+            //               );
+            //             }
+            //           }
+            //         },
+            //       );
+            //     }
+            //   },
+            // ),
             // Second tab view
             Scaffold(
               body: Center(child: Text('Geçmiş Randevularım İçeriği')),

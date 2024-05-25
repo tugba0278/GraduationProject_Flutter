@@ -169,6 +169,11 @@ class _HomePageState extends State<HomePage> {
                       print(
                           "index burada!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                       print(index);
+                    } else if (index == 2) {
+                      Navigator.pushNamed(context, '/appoinment-entry/');
+                      print(
+                          "index burada!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                      print(index);
                     } else if (index == 4) {
                       Navigator.pushNamed(context, '/inform/');
                       print(

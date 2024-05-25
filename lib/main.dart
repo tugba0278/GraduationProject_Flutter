@@ -5,6 +5,7 @@ import 'package:bitirme_projesi/pages/blood_donation_page.dart';
 import 'package:bitirme_projesi/pages/blood_need_page.dart';
 import 'package:bitirme_projesi/pages/donation_list_page.dart';
 import 'package:bitirme_projesi/pages/feedback_page.dart';
+import 'package:bitirme_projesi/pages/firebase_api.dart';
 import 'package:bitirme_projesi/pages/inform_page.dart';
 import 'package:bitirme_projesi/pages/password_update_page.dart';
 import 'package:bitirme_projesi/pages/splash_page.dart';
@@ -21,6 +22,7 @@ import 'package:bitirme_projesi/pages/home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
   runApp(const MyApp());
 }
 
