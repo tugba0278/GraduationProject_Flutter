@@ -9,10 +9,10 @@ Projenin UI tasarımı rapora eklenmiştir. Uygulama Flutter ile kodlanmıştır
 [20290278 BLM4061 Sunum.pdf](https://github.com/tugba0278/graduation_project_flutter/blob/main/pdf/20290278%20BLM4061%20Sunum.pdf)
 
 
-"\n"
+
 <b>will be added to the app in V2:</b>
 
-
---> Blood Donation Centers' map
 <p></p>
+--> Blood Donation Centers' map
+
 --> Send notification at need blood time
