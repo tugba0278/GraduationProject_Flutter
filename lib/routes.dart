@@ -13,3 +13,4 @@ const appoinmentPageRoute = "/appoinment-entry/";
 const informPageRoute = "/inform/";
 const feedbackPageRoute = "/feedback/";
 const aboutPageRoute = "/about/";
+const appoinmentHomePageRoute = "/appoinment-home-page/";

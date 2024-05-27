@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                     break;
                   case 2:
                     iconData = Icons.calendar_today;
-                    title = 'Randevu Sistemi';
+                    title = 'Randevu Hatırlatma';
                     break;
                   case 3:
                     iconData = Icons.map;
@@ -170,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                           "index burada!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                       print(index);
                     } else if (index == 2) {
-                      Navigator.pushNamed(context, '/appoinment-entry/');
+                      Navigator.pushNamed(context, '/appoinment-home-page/');
                       print(
                           "index burada!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                       print(index);

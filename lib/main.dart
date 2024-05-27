@@ -1,4 +1,5 @@
 import 'package:bitirme_projesi/pages/about_page.dart';
+import 'package:bitirme_projesi/pages/appoinment_remainder.dart';
 import 'package:bitirme_projesi/pages/appoinment_entry.dart';
 import 'package:bitirme_projesi/pages/blood_advertisement_page.dart';
 import 'package:bitirme_projesi/pages/blood_donation_page.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         informPageRoute: (context) => const InformPage(),
         feedbackPageRoute: (context) => const FeedbackPage(),
         aboutPageRoute: (context) => const AboutPage(),
+        appoinmentHomePageRoute: (context) => const AppoinmentRemainderPage(),
       },
     );
   }

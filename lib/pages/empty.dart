@@ -1,4 +1,4 @@
-import 'package:bitirme_projesi/pages/event.dart';
+import 'package:bitirme_projesi/pages/event2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
