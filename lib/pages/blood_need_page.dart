@@ -300,6 +300,7 @@ class _BloodNeedPageState extends State<BloodNeedPage> {
                 onPressed: () {
                   if (selectedBloodType.isNotEmpty && selectedCity.isNotEmpty) {
                     addCityToFirestore(selectedCity, selectedBloodType);
+
                     print("gönderildi!!!!!!!!!!!!!!");
                     showDialog(
                       context: context,

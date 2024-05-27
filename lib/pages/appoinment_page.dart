@@ -107,61 +107,6 @@ class _AppointmentPageState extends State<AppointmentPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  scrollable: true,
-                  title: Text("Etkinlik Adı"),
-                  content: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: TextField(
-                      controller: _eventController,
-                    ),
-                  ),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () {
-                          events.addAll({
-                            _selectedDay!: [Event(_eventController.text)]
-                          });
-                          print(events);
-                          print(events[_selectedDay]);
-                          List<String> eventNames = events[_selectedDay]!
-                              .map((event) => event.title)
-                              .toList();
-                          String eventNameString = eventNames.join(
-                              ', '); // Veya başka bir ayraç kullanabilirsiniz
-
-                          print(
-                              eventNameString); // Event isimlerini içeren dizeyi yazdır
-                          if (_selectedDay != null &&
-                              _eventController.text.isNotEmpty) {
-                            _saveAppointmentToDatabase(
-                                _selectedDay!, _eventController.text);
-                            setState(() {
-                              _eventController.clear();
-                            });
-                          } else {
-                            // Kullanıcıya geçerli bir tarih ve etkinlik adı girmesi gerektiğini bildir
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text(
-                                  'Lütfen geçerli bir tarih ve etkinlik adı girin.'),
-                              backgroundColor: Color(0xFF504658),
-                            ));
-                          }
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("Oluştur"))
-                  ],
-                );
-              });
-        },
-        child: Icon(Icons.add),
-      ),
       body: GestureDetector(
         onTap: () {
           setState(() {
@@ -171,7 +116,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
         },
         child: Container(
           //height: 10000,
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 90),
           child: Column(
             children: [
               TableCalendar(
@@ -211,6 +156,69 @@ class _AppointmentPageState extends State<AppointmentPage> {
                       DateTime.now().subtract(const Duration(days: 1)));
                 },
               ),
+              // Boşluk ekledik
+              Padding(
+                padding: const EdgeInsets.only(left: 220),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            scrollable: true,
+                            title: Text("Etkinlik Adı"),
+                            content: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: TextField(
+                                controller: _eventController,
+                              ),
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    events.addAll({
+                                      _selectedDay!: [
+                                        Event(_eventController.text)
+                                      ]
+                                    });
+                                    print(events);
+                                    print(events[_selectedDay]);
+                                    List<String> eventNames =
+                                        events[_selectedDay]!
+                                            .map((event) => event.title)
+                                            .toList();
+                                    String eventNameString = eventNames.join(
+                                        ', '); // Veya başka bir ayraç kullanabilirsiniz
+
+                                    print(
+                                        eventNameString); // Event isimlerini içeren dizeyi yazdır
+                                    if (_selectedDay != null &&
+                                        _eventController.text.isNotEmpty) {
+                                      _saveAppointmentToDatabase(
+                                          _selectedDay!, _eventController.text);
+                                      setState(() {
+                                        _eventController.clear();
+                                      });
+                                    } else {
+                                      // Kullanıcıya geçerli bir tarih ve etkinlik adı girmesi gerektiğini bildir
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content: Text(
+                                            'Lütfen geçerli bir tarih ve etkinlik adı girin.'),
+                                        backgroundColor: Color(0xFF504658),
+                                      ));
+                                    }
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text("Oluştur"))
+                            ],
+                          );
+                        });
+                  },
+                  child: Icon(Icons.add),
+                ),
+              ),
+              SizedBox(height: 10), // Boşluk ekledik
               Expanded(
                 child: ValueListenableBuilder<List<Event>>(
                   valueListenable: _selectedEvents,

@@ -10,6 +10,7 @@ import 'package:bitirme_projesi/pages/inform_page.dart';
 import 'package:bitirme_projesi/pages/password_update_page.dart';
 import 'package:bitirme_projesi/pages/splash_page.dart';
 import 'package:bitirme_projesi/pages/user_profile_page.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:bitirme_projesi/firebase_options.dart';
@@ -22,7 +23,16 @@ import 'package:bitirme_projesi/pages/home_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseApi().initNotifications();
+  //await FirebaseApi().initNotifications();
+  // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  //   // Bildirimi aldığınızda burası çalışacak
+  //   print("Bildirim alındı: ${message.notification?.title}");
+  // });
+
+  // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+  //   // Kullanıcı uygulamayı açtığında burası çalışacak
+  //   print("Bildirim açıldı: ${message.notification?.title}");
+  // });
   runApp(const MyApp());
 }
 
