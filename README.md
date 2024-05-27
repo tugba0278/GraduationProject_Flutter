@@ -12,7 +12,7 @@ Projenin UI tasarımı rapora eklenmiştir. Uygulama Flutter ile kodlanmıştır
 
 
 
-
+<p></p>
 <b>will be added to the app in V2:</b>
 
 
