@@ -10,7 +10,9 @@ Projenin UI tasarımı rapora eklenmiştir. Uygulama Flutter ile kodlanmıştır
 
 
 
-list of app in V2:
+will be added to the app in V2:
+
 
 --> Blood Donation Centers' map
+
 --> Send notification at need blood time
