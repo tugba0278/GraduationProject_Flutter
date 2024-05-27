@@ -1,5 +1,5 @@
 import 'package:bitirme_projesi/pages/home_page.dart';
-import 'package:bitirme_projesi/pages/oval_clipper.dart';
+import 'package:bitirme_projesi/model/oval_clipper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

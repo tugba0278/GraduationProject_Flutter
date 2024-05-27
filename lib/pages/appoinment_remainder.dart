@@ -1,8 +1,7 @@
 import 'dart:collection';
-
 import 'package:bitirme_projesi/pages/edit_event.dart';
-import 'package:bitirme_projesi/pages/event.dart';
-import 'package:bitirme_projesi/pages/event.item.dart';
+import 'package:bitirme_projesi/model/event.dart';
+import 'package:bitirme_projesi/model/event.item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -96,142 +95,142 @@ class _AppoinmentRemainderPageState extends State<AppoinmentRemainderPage> {
           ),
         ),
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 60),
-        child: ListView(
-          children: [
-            SizedBox(height: 90),
-            TableCalendar(
-              eventLoader: _getEventsForTheDay,
-              calendarFormat: _calendarFormat,
-              onFormatChanged: (format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              },
-              focusedDay: _focusedDay,
-              firstDay: _firstDay,
-              lastDay: _lastDay,
-              onPageChanged: (focusedDay) {
-                setState(() {
-                  _focusedDay = focusedDay;
-                });
-                _loadFirestoreEvents();
-              },
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-              onDaySelected: (selectedDay, focusedDay) {
-                print(_events[selectedDay]);
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                });
-              },
-              calendarStyle: const CalendarStyle(
-                weekendTextStyle: TextStyle(
-                  color: Colors.red,
-                ),
-                selectedDecoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.red,
-                ),
-                cellMargin: EdgeInsets.all(8.0),
-                defaultTextStyle: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              calendarBuilders: CalendarBuilders(
-                headerTitleBuilder: (context, day) {
-                  // Gün, ay ve yıl olarak başlığı oluştur
-                  return Container(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      '${day.day}-${day.month}-${day.year}',
+      body: Stack(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 60),
+            child: ListView(
+              children: [
+                TableCalendar(
+                  eventLoader: _getEventsForTheDay,
+                  calendarFormat: _calendarFormat,
+                  onFormatChanged: (format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  },
+                  focusedDay: _focusedDay,
+                  firstDay: _firstDay,
+                  lastDay: _lastDay,
+                  onPageChanged: (focusedDay) {
+                    setState(() {
+                      _focusedDay = focusedDay;
+                    });
+                    _loadFirestoreEvents();
+                  },
+                  selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+                  onDaySelected: (selectedDay, focusedDay) {
+                    print(_events[selectedDay]);
+                    setState(() {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    });
+                  },
+                  calendarStyle: const CalendarStyle(
+                    weekendTextStyle: TextStyle(
+                      color: Colors.red,
                     ),
-                  );
-                },
-              ),
-            ),
-            ..._getEventsForTheDay(_selectedDay).map(
-              (event) => EventItem(
-                  event: event,
-                  onTap: () async {
-                    final res = await Navigator.push<bool>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => EditEvent(
-                            firstDate: _firstDay,
-                            lastDate: _lastDay,
-                            event: event),
-                      ),
-                    );
-                    if (res ?? false) {
-                      _loadFirestoreEvents();
-                    }
-                  },
-                  onDelete: () async {
-                    final delete = await showDialog<bool>(
-                      context: context,
-                      builder: (_) => AlertDialog(
-                        title: const Text("Delete Event?"),
-                        content: const Text("Are you sure you want to delete?"),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, false),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.black,
-                            ),
-                            child: const Text("No"),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, true),
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.red,
-                            ),
-                            child: const Text("Yes"),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (delete ?? false) {
-                      await FirebaseFirestore.instance
-                          .collection('events')
-                          .doc(event.id)
-                          .delete();
-                      _loadFirestoreEvents();
-                    }
-                  }),
-            ),
-            SizedBox(
-              height: 60,
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    right: 30), // Butonun içeriye göre konumunu ayarlar
-                child: FloatingActionButton(
-                  onPressed: () async {
-                    final result = await Navigator.push<bool>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => AddEvent(
-                          firstDate: _firstDay,
-                          lastDate: _lastDay,
-                          selectedDate: _selectedDay,
+                    selectedDecoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.red,
+                    ),
+                    cellMargin: EdgeInsets.all(8.0),
+                    defaultTextStyle: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  calendarBuilders: CalendarBuilders(
+                    headerTitleBuilder: (context, day) {
+                      // Gün, ay ve yıl olarak başlığı oluştur
+                      return Container(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          '${day.day}-${day.month}-${day.year}',
                         ),
-                      ),
-                    );
-                    if (result ?? false) {
-                      _loadFirestoreEvents();
-                    }
-                  },
-                  backgroundColor:
-                      Colors.red, // Butonun arka plan rengini ayarlar
-                  elevation: 4, // Butonun yüksekliğini ayarlar
-                  child: const Icon(Icons.add),
+                      );
+                    },
+                  ),
                 ),
-              ),
+                const SizedBox(
+                  height: 15,
+                ),
+                ..._getEventsForTheDay(_selectedDay).map(
+                  (event) => EventItem(
+                      event: event,
+                      onTap: () async {
+                        final res = await Navigator.push<bool>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => EditEvent(
+                                firstDate: _firstDay,
+                                lastDate: _lastDay,
+                                event: event),
+                          ),
+                        );
+                        if (res ?? false) {
+                          _loadFirestoreEvents();
+                        }
+                      },
+                      onDelete: () async {
+                        final delete = await showDialog<bool>(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: const Text("Delete Event?"),
+                            content:
+                                const Text("Are you sure you want to delete?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, false),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                ),
+                                child: const Text("No"),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(context, true),
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.red,
+                                ),
+                                child: const Text("Yes"),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (delete ?? false) {
+                          await FirebaseFirestore.instance
+                              .collection('events')
+                              .doc(event.id)
+                              .delete();
+                          _loadFirestoreEvents();
+                        }
+                      }),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+          Positioned(
+            bottom: 110.0,
+            right: 35.0,
+            child: FloatingActionButton(
+              onPressed: () async {
+                final result = await Navigator.push<bool>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => AddEvent(
+                      firstDate: _firstDay,
+                      lastDate: _lastDay,
+                      selectedDate: _selectedDay,
+                    ),
+                  ),
+                );
+                if (result ?? false) {
+                  _loadFirestoreEvents();
+                }
+              },
+              backgroundColor: Colors.red,
+              elevation: 4,
+              child: const Icon(Icons.add),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,4 +1,4 @@
-import 'package:bitirme_projesi/pages/event.dart';
+import 'package:bitirme_projesi/model/event.dart';
 import 'package:flutter/material.dart';
 
 class EventItem extends StatelessWidget {
