@@ -1,14 +1,11 @@
 # Bitirme_Projesi
-Projenin UI tasarımı rapora eklenmiştir. Uygulama Flutter ile kodlanmıştır.
+Projenin UI tasarımı rapora ve sunuma eklenmiştir. Uygulama Flutter ile kodlanmıştır.
 
 
-[20290278 BLM4061 Rapor.pdf](https://github.com/tugba0278/graduation_project_flutter/blob/main/pdf/20290278%20BLM4061%20Rapor.pdf)
+[BLM4062 Sunum.pdf](https://github.com/user-attachments/files/15515082/BLM4062.Sunum.pdf)
 
 
-
-[20290278 BLM4061 Sunum.pdf](https://github.com/tugba0278/graduation_project_flutter/blob/main/pdf/20290278%20BLM4061%20Sunum.pdf)
-
-
+[BLM4062 Rapor.pdf](https://github.com/user-attachments/files/15515074/BLM4062.Rapor.pdf)
 
 <b>will be added to the app in V2:</b>
 
