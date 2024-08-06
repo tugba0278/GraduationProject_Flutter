@@ -5,6 +5,7 @@ import 'package:bitirme_projesi/pages/blood_advertisement_page.dart';
 import 'package:bitirme_projesi/pages/blood_donation_page.dart';
 import 'package:bitirme_projesi/pages/blood_need_page.dart';
 import 'package:bitirme_projesi/pages/donation_list_page.dart';
+import 'package:bitirme_projesi/pages/empty2.dart';
 import 'package:bitirme_projesi/pages/feedback_page.dart';
 import 'package:bitirme_projesi/pages/inform_page.dart';
 import 'package:bitirme_projesi/pages/password_update_page.dart';
@@ -61,6 +62,7 @@ class MyApp extends StatelessWidget {
         feedbackPageRoute: (context) => const FeedbackPage(),
         aboutPageRoute: (context) => const AboutPage(),
         appoinmentHomePageRoute: (context) => const AppoinmentRemainderPage(),
+        emptyPageRoute: (context) => const Empty2Page(),
       },
     );
   }

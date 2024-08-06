@@ -48,7 +48,7 @@ class _AboutPageState extends State<AboutPage> {
                 child: Image.asset(
                   'lib/assets/blood-donation.png', // Resminizin yolunu belirtin
                   width: MediaQuery.of(context).size.width *
-                      0.5, // Ekran genişliğinin %80'i kadar
+                      0.5, // Ekran genişliğinin %50'i kadar
                   fit: BoxFit.contain,
                 ),
               ),
